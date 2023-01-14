@@ -12,6 +12,11 @@ import (
 	"time"
 
 	"github.com/prophittcorey/muse"
+	"github.com/prophittcorey/muse/pkg/audio"
+)
+
+var (
+	MusicCollection []audio.File
 )
 
 type route struct {

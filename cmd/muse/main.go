@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/prophittcorey/muse/internal/web"
+	"github.com/prophittcorey/muse/pkg/audio"
 )
 
 func setenv(key, value string) {
@@ -39,6 +40,13 @@ func main() {
 	setenv("HOST", host)
 	setenv("PORT", port)
 	setenv("DOMAIN", domain)
+
+	web.MusicCollection = audio.Scan(dir)
+
+	if len(web.MusicCollection) == 0 {
+		log.Fatalf("err: no music files were found for %s", dir)
+		return
+	}
 
 	if err := web.ListenAndServe(); err != nil {
 		log.Fatal(err)
