@@ -1,0 +1,46 @@
+/*
+ * app.css
+ */
+
+:root {
+  font-size: 18px;
+
+  --ff: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+
+  --black: #131313;
+  --gray: #eee;
+  --pink: #d32b74;
+  --pink-darker: #c31b64;
+  --pink-darkest: #a30b54;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--ff);
+  font-size: 100%;
+  color: var(--black);
+  vertical-align: baseline;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body > main {
+  max-width: 1280px;
+  margin: 0 auto;
+  line-height: 1;
+  display: block;
+}
+
+hr {
+  padding: 0;
+  margin: 0;
+  outline: none;
+  border: none;
+  background: var(--gray);
+  margin-bottom: 1rem;
+  height: 1px;
+}
