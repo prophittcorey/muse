@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	MusicCollection []audio.File
+	MusicCollection []audio.Song
 )
 
 type route struct {
