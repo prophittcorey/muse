@@ -8,7 +8,9 @@
 
   <body>
     <main>
-      <p>We've got some work to do.</p>
+      {{ range $file := .Collection }}
+        <p>{{ $file.Path }}</p>
+      {{ end }}
     </main>
   </body>
 </html>

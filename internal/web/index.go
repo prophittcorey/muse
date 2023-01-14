@@ -13,14 +13,6 @@ func init() {
 		Path: "/",
 		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
 			switch r.Method {
-			case "POST":
-				err := templates.ExecuteTemplate(w, "pages/index.tmpl", map[string]interface{}{
-					"Music": []any{},
-				})
-
-				if err != nil {
-					log.Printf("web: error rendering pretty page; %s", err)
-				}
 			case "GET":
 				if r.URL.Path != "/" {
 					// NOTE: This is the catch all code path. We could do things here like
@@ -28,7 +20,11 @@ func init() {
 
 					http.NotFound(w, r)
 				} else {
-					if err := templates.ExecuteTemplate(w, "pages/index.tmpl", nil); err != nil {
+					data := map[string]interface{}{
+						"Collection": MusicCollection,
+					}
+
+					if err := templates.ExecuteTemplate(w, "pages/index.tmpl", data); err != nil {
 						log.Printf("web: error rendering index page; %s", err)
 					}
 				}
