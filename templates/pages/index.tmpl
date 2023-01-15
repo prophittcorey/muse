@@ -8,8 +8,8 @@
 
   <body>
     <main>
-      {{ range $file := .Collection }}
-        <p>{{ $file.Path }}</p>
+      {{ range $song := .Collection }}
+        <p>{{ $song.Artist }} / {{ $song.Album }} / {{ $song.Title }}</p>
       {{ end }}
     </main>
   </body>
