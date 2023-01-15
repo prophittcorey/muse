@@ -6,6 +6,21 @@ import (
 	"os"
 )
 
+const (
+	Unsynchronization = 1 << 7
+	ExtendedHeader    = 1 << 6
+	Experimental      = 1 << 5
+	FooterPresent     = 1 << 4
+)
+
+type Tag struct {
+	Header Header
+}
+
+func (t Tag) String() string {
+	return fmt.Sprintf("%s: %d bytes; extended %v", t.Header.Version(), t.Header.Size, t.Header.Flag(ExtendedHeader))
+}
+
 type Header struct {
 	Tag      string
 	Revision int
@@ -14,8 +29,12 @@ type Header struct {
 	Size     int
 }
 
-func (m Header) Version() string {
-	return fmt.Sprintf("%sv2.%d.%d\n", m.Tag, m.Revision, m.Minor)
+func (h Header) Version() string {
+	return fmt.Sprintf("%sv2.%d.%d", h.Tag, h.Revision, h.Minor)
+}
+
+func (h Header) Flag(flag int) bool {
+	return (h.Flags & flag) != 0
 }
 
 type Song struct {
@@ -24,7 +43,8 @@ type Song struct {
 	Artist    string
 	Album     string
 	Thumbnail []byte
-	Header    Header
+
+	Tag Tag
 }
 
 func (s Song) Load() error {
@@ -42,14 +62,15 @@ func (s Song) Load() error {
 		return err
 	}
 
-	s.Header = Header{
-		Tag:      string(bs[0:3]),
-		Revision: int(bs[3]),
-		Minor:    int(bs[4]),
+	s.Tag = Tag{
+		Header: Header{
+			Tag:      string(bs[0:3]),
+			Revision: int(bs[3]),
+			Minor:    int(bs[4]),
+			Flags:    int(bs[5]),
+			Size:     (int(bs[6]) << 24) | (int(bs[7]) << 16) | (int(bs[8]) << 8) | int(bs[9]),
+		},
 	}
-
-	// TODO: Parse the flags and interpret them.
-	// TODO: Parse the size.
 
 	return nil
 }
