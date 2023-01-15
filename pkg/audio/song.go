@@ -15,10 +15,19 @@ const (
 
 type Tag struct {
 	Header Header
+	Frames []Frame
 }
 
 func (t Tag) String() string {
 	return fmt.Sprintf("%s: %d bytes; extended %v", t.Header.Version(), t.Header.Size, t.Header.Flag(ExtendedHeader))
+}
+
+func (t *Tag) ParseFrames() error {
+
+	return nil
+}
+
+type Frame struct {
 }
 
 type Header struct {
@@ -72,5 +81,5 @@ func (s Song) Load() error {
 		},
 	}
 
-	return nil
+	return s.Tag.ParseFrames()
 }
