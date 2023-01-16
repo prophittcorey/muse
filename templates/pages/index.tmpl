@@ -9,7 +9,7 @@
   <body>
     <main>
       {{ range $song := .Collection }}
-        <p>{{ $song.Artist }} / {{ $song.Album }} / {{ $song.Title }}</p>
+        <p>{{ $song.Tag.Artist }} / {{ $song.Tag.Album }} / {{ $song.Tag.Title }}</p>
       {{ end }}
     </main>
   </body>

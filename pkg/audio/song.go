@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"log"
 	"os"
 )
 
@@ -15,12 +14,12 @@ const (
 	FooterPresent     = 1 << 4
 )
 
-type Frame struct {
-}
-
 type Tag struct {
-	Header Header
-	Frames []Frame
+	Header    Header
+	Title     string
+	Artist    string
+	Album     string
+	Thumbnail []byte
 }
 
 func (t Tag) String() string {
@@ -44,15 +43,23 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		id := string(header[0:4])
 		size := (int(header[4]) << 24) | (int(header[5]) << 16) | (int(header[6]) << 8) | int(header[7])
 
-		log.Println("ID: ", id, " Size: ", size, " bytes")
+		data := make([]byte, size)
 
-		text := make([]byte, size)
-
-		if _, err := io.ReadFull(r, text); err != nil {
+		if _, err := io.ReadFull(r, data); err != nil {
 			break
 		}
 
-		log.Println(string(text))
+		switch id {
+		case "TALB":
+			t.Album = string(data)
+		case "TPE1":
+			t.Artist = string(data)
+		case "TIT2":
+			t.Title = string(data)
+		case "APIC":
+			t.Thumbnail = data
+		default:
+		}
 
 		break
 	}
@@ -77,13 +84,8 @@ func (h Header) Flag(flag int) bool {
 }
 
 type Song struct {
-	Path      string
-	Title     string
-	Artist    string
-	Album     string
-	Thumbnail []byte
-
-	Tag Tag
+	Path string
+	Tag  Tag
 }
 
 func (s Song) Load() error {
@@ -147,5 +149,5 @@ func (s Song) Load() error {
 		return err
 	}
 
-	return s.Tag.ParseFrames(bytes.NewReader(frames))
+	return (&s.Tag).ParseFrames(bytes.NewReader(frames))
 }
