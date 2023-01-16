@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"unicode/utf16"
+	"unicode/utf8"
 )
 
 const (
@@ -42,7 +44,6 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 
 		id := string(header[0:4])
 		size := (int(header[4]) << 24) | (int(header[5]) << 16) | (int(header[6]) << 8) | int(header[7])
-
 		data := make([]byte, size)
 
 		if _, err := io.ReadFull(r, data); err != nil {
@@ -51,11 +52,11 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 
 		switch id {
 		case "TALB":
-			t.Album = string(data)
+			t.Album = decode(data[1:], data[0])
 		case "TPE1":
-			t.Artist = string(data)
+			t.Artist = decode(data[1:], data[0])
 		case "TIT2":
-			t.Title = string(data)
+			t.Title = decode(data[1:], data[0])
 		case "APIC":
 			t.Thumbnail = data
 		default:
@@ -85,10 +86,10 @@ func (h Header) Flag(flag int) bool {
 
 type Song struct {
 	Path string
-	Tag  Tag
+	Tag  *Tag
 }
 
-func (s Song) Load() error {
+func (s *Song) Load() error {
 	f, err := os.Open(s.Path)
 
 	if err != nil {
@@ -105,7 +106,7 @@ func (s Song) Load() error {
 		return err
 	}
 
-	s.Tag = Tag{
+	s.Tag = &Tag{
 		Header: Header{
 			Tag:      string(bs[0:3]),
 			Revision: int(bs[3]),
@@ -149,5 +150,32 @@ func (s Song) Load() error {
 		return err
 	}
 
-	return (&s.Tag).ParseFrames(bytes.NewReader(frames))
+	return s.Tag.ParseFrames(bytes.NewReader(frames))
+}
+
+func decode(bs []byte, encoding byte) string {
+	// 00 – ISO-8859-1 (ASCII).
+	// 01 – UCS-2 (UTF-16 encoded Unicode with BOM), in ID3v2.2 and ID3v2.3.
+	// 02 – UTF-16BE encoded Unicode without BOM, in ID3v2.4.
+	// 03 – UTF-8 encoded Unicode, in ID3v2.4.
+
+	switch encoding {
+	case 0, 3:
+		return string(bs)
+	case 1, 2:
+		u16s := make([]uint16, 1)
+		ret := &bytes.Buffer{}
+		b8buf := make([]byte, 4)
+
+		for i := 0; i < len(bs); i += 2 {
+			u16s[0] = uint16(bs[i]) + (uint16(bs[i+1]) << 8)
+			r := utf16.Decode(u16s)
+			n := utf8.EncodeRune(b8buf, r[0])
+			ret.Write(b8buf[:n])
+		}
+
+		return ret.String()
+	default:
+		return ""
+	}
 }

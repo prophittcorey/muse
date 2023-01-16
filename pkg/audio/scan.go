@@ -4,8 +4,8 @@ import (
 	"path/filepath"
 )
 
-func Scan(globs ...string) []Song {
-	files := []Song{}
+func Scan(globs ...string) []*Song {
+	files := []*Song{}
 
 	for _, glob := range globs {
 		if matches, err := filepath.Glob(glob); err == nil {
@@ -15,7 +15,7 @@ func Scan(globs ...string) []Song {
 				song := Song{Path: match}
 
 				if err := song.Load(); err == nil {
-					files = append(files, song)
+					files = append(files, &song)
 				}
 			}
 		}
