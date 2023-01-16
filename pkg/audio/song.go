@@ -1,6 +1,7 @@
 package audio
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -26,14 +27,35 @@ func (t Tag) String() string {
 	return fmt.Sprintf("%s: %d bytes; extended %v", t.Header.Version(), t.Header.Size, t.Header.Flag(ExtendedHeader))
 }
 
-func (t *Tag) ParseFrames(r io.ReadSeeker) error {
-	bs := make([]byte, 10)
+func (t *Tag) ParseFrames(r io.Reader) error {
+	/*
+		Frame ID      $xx xx xx xx  (four characters)
+		Size      4 * %0xxxxxxx
+		Flags         $xx xx
+	*/
 
-	if _, err := io.ReadFull(r, bs); err != nil {
-		return err
+	for {
+		header := make([]byte, 10)
+
+		if _, err := io.ReadFull(r, header); err != nil {
+			break
+		}
+
+		id := string(header[0:4])
+		size := (int(header[4]) << 24) | (int(header[5]) << 16) | (int(header[6]) << 8) | int(header[7])
+
+		log.Println("ID: ", id, " Size: ", size, " bytes")
+
+		text := make([]byte, size)
+
+		if _, err := io.ReadFull(r, text); err != nil {
+			break
+		}
+
+		log.Println(string(text))
+
+		break
 	}
-
-	log.Println(string(bs))
 
 	return nil
 }
@@ -111,5 +133,19 @@ func (s Song) Load() error {
 		}
 	}
 
-	return s.Tag.ParseFrames(f)
+	/* pull the tag frames out of the remaining portion of the file */
+
+	framelen := s.Tag.Header.Size
+
+	if s.Tag.Header.Flag(FooterPresent) {
+		framelen -= 10
+	}
+
+	frames := make([]byte, framelen)
+
+	if _, err = io.ReadFull(f, frames); err != nil {
+		return err
+	}
+
+	return s.Tag.ParseFrames(bytes.NewReader(frames))
 }
