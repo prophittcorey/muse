@@ -53,7 +53,7 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		switch id {
 		case "TALB":
 			t.Album = decode(data[1:], data[0])
-		case "TPE1":
+		case "TPE1", "TOPE":
 			t.Artist = decode(data[1:], data[0])
 		case "TIT2":
 			t.Title = decode(data[1:], data[0])
