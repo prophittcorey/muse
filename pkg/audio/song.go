@@ -3,6 +3,7 @@ package audio
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 )
 
@@ -13,6 +14,9 @@ const (
 	FooterPresent     = 1 << 4
 )
 
+type Frame struct {
+}
+
 type Tag struct {
 	Header Header
 	Frames []Frame
@@ -22,12 +26,16 @@ func (t Tag) String() string {
 	return fmt.Sprintf("%s: %d bytes; extended %v", t.Header.Version(), t.Header.Size, t.Header.Flag(ExtendedHeader))
 }
 
-func (t *Tag) ParseFrames() error {
+func (t *Tag) ParseFrames(r io.ReadSeeker) error {
+	bs := make([]byte, 10)
+
+	if _, err := io.ReadFull(r, bs); err != nil {
+		return err
+	}
+
+	log.Println(string(bs))
 
 	return nil
-}
-
-type Frame struct {
 }
 
 type Header struct {
@@ -65,6 +73,8 @@ func (s Song) Load() error {
 
 	defer f.Close()
 
+	/* read and parse the header */
+
 	bs := make([]byte, 10)
 
 	if _, err = io.ReadFull(f, bs); err != nil {
@@ -81,5 +91,25 @@ func (s Song) Load() error {
 		},
 	}
 
-	return s.Tag.ParseFrames()
+	/* if an extended header is present, skip it */
+
+	if s.Tag.Header.Flag(ExtendedHeader) {
+		bs := make([]byte, 6)
+
+		if _, err = io.ReadFull(f, bs); err != nil {
+			return err
+		}
+
+		totalsize := ((int(bs[0]) << 24) | (int(bs[1]) << 16) | (int(bs[2]) << 8) | int(bs[3])) - 6
+
+		if totalsize > 0 {
+			bs := make([]byte, totalsize)
+
+			if _, err = io.ReadFull(f, bs); err != nil {
+				return err
+			}
+		}
+	}
+
+	return s.Tag.ParseFrames(f)
 }
