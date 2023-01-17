@@ -8,12 +8,29 @@
 
   <body>
     <main>
-      {{ range $song := .Collection }}
-        {{ if $song.Tag.Picture }}
-          <img src="/thumbnail/{{ $song.ID }}" width="100">
-        {{ end }}
-        <p>{{ $song.Tag.Artist }} | {{ $song.Tag.Album }} &gt; {{ $song.Tag.Title }} ({{ $song.Path }})</p>
-      {{ end }}
+      <p>Loaded {{ len .Collection }} songs.</p>
+      <table>
+        <thead>
+          <th>Artist</th>
+          <th>Album</th>
+          <th>Title</th>
+          <th>Cover</th>
+        </thead>
+        <tbody>
+          {{ range $song := .Collection }}
+          <tr>
+            <td>{{ $song.Tag.Artist }}</td>
+            <td>{{ $song.Tag.Album }}</td>
+            <td>{{ $song.Tag.Title }}</td>
+            <td>
+              {{ if $song.Tag.Picture }}
+                <img src="/thumbnail/{{ $song.ID }}" width="100">
+              {{ end }}
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
     </main>
   </body>
 </html>
