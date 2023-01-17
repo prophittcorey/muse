@@ -1,6 +1,7 @@
 package audio
 
 import (
+	"log"
 	"path/filepath"
 )
 
@@ -16,6 +17,8 @@ func Scan(globs ...string) []*Song {
 
 				if err := song.Load(); err == nil {
 					files = append(files, &song)
+				} else {
+					log.Printf("failed to load %s; %s\n", match, err)
 				}
 			}
 		}
