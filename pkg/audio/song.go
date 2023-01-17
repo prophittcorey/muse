@@ -46,7 +46,7 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		Flags         $xx xx
 	*/
 
-	log.Println("HEADER ", t.Header.Size)
+	log.Printf("%s: %d bytes\n", t.Header.Version(), t.Header.Size)
 
 	for {
 		header := make([]byte, 10)
@@ -95,8 +95,6 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 			pictype := data[0] /* special byte */
 
 			description, data, _ := bytes.Cut(data[1:], []byte{0})
-
-			log.Println(decode(mime, encoding), pictype, decode(description, encoding))
 
 			t.Picture = &Picture{
 				Description: decode(description, encoding),
@@ -203,11 +201,7 @@ func (s *Song) Load() error {
 		return err
 	}
 
-	log.Printf("==\n%s\n", s.Path)
-
-	if err := s.Tag.ParseFrames(bytes.NewReader(frames)); err != nil {
-		return err
-	}
+	log.Printf("%s\n", s.Path)
 
 	return s.Tag.ParseFrames(bytes.NewReader(frames))
 }
