@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"unicode/utf16"
 	"unicode/utf8"
@@ -16,12 +17,20 @@ const (
 	FooterPresent     = 1 << 4
 )
 
+type Picture struct {
+	Mime        string
+	Type        string
+	Description string
+	Data        []byte
+}
+
 type Tag struct {
-	Header    Header
-	Title     string
-	Artist    string
-	Album     string
-	Thumbnail []byte
+	Header  Header
+	Title   string
+	Artist  string
+	Album   string
+	Date    string
+	Picture Picture
 }
 
 func (t Tag) String() string {
@@ -34,6 +43,8 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		Size      4 * %0xxxxxxx
 		Flags         $xx xx
 	*/
+
+	log.Println("HEADER ", t.Header.Size)
 
 	for {
 		header := make([]byte, 10)
@@ -50,19 +61,54 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 			break
 		}
 
+		log.Println("GOT: ", id, size)
+		// log.Println(decode(data[1:], data[0]))
+
 		switch id {
 		case "TALB":
 			t.Album = decode(data[1:], data[0])
+		case "TDRC":
+			t.Date = decode(data[1:], data[0])
 		case "TPE1", "TOPE":
 			t.Artist = decode(data[1:], data[0])
 		case "TIT2":
 			t.Title = decode(data[1:], data[0])
 		case "APIC":
-			t.Thumbnail = data
+			/*
+				41 50 49 43  //APIC
+				00 08 5A 04  //Frame Size
+				00 03        //Flags: Unsynchronisation | Data Length Indicator.
+				00 02 19 F5  //4 bytes data length
+
+				00           //1 byte text encoding (ISO-8859-1)
+				69 6D 61 67  //image/jpeg
+				65 2F 6A 70  // ”
+				65 67        // ”
+			*/
+
+			encoding := data[0]
+
+			mime, data, _ := bytes.Cut(data[1:], []byte{0})
+
+			pictype := data[0] /* special byte */
+
+			description, data, _ := bytes.Cut(data[1:], []byte{0})
+
+			log.Println(decode(mime, encoding), pictype, decode(description, encoding))
+
+			t.Picture = Picture{
+				Description: decode(description, encoding),
+				Mime:        decode(mime, encoding),
+				Type:        string(pictype),
+				Data:        data,
+			}
+
+			// For debugging purposes..
+			// f, _ := os.Create(fmt.Sprintf("/tmp/%s.png", "album"))
+			// f.Write(data)
+			// f.Close()
 		default:
 		}
-
-		break
 	}
 
 	return nil
@@ -149,6 +195,8 @@ func (s *Song) Load() error {
 	if _, err = io.ReadFull(f, frames); err != nil {
 		return err
 	}
+
+	log.Printf("==\n%s\n", s.Path)
 
 	return s.Tag.ParseFrames(bytes.NewReader(frames))
 }
