@@ -9,6 +9,9 @@
   <body>
     <main>
       {{ range $song := .Collection }}
+        {{ if $song.Tag.Picture }}
+          <img src="/thumbnail/{{ $song.ID }}" width="100">
+        {{ end }}
         <p>{{ $song.Tag.Artist }} | {{ $song.Tag.Album }} &gt; {{ $song.Tag.Title }} ({{ $song.Path }})</p>
       {{ end }}
     </main>

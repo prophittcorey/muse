@@ -2,6 +2,8 @@ package audio
 
 import (
 	"bytes"
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"log"
@@ -30,7 +32,7 @@ type Tag struct {
 	Artist  string
 	Album   string
 	Date    string
-	Picture Picture
+	Picture *Picture
 }
 
 func (t Tag) String() string {
@@ -96,7 +98,7 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 
 			log.Println(decode(mime, encoding), pictype, decode(description, encoding))
 
-			t.Picture = Picture{
+			t.Picture = &Picture{
 				Description: decode(description, encoding),
 				Mime:        decode(mime, encoding),
 				Type:        string(pictype),
@@ -131,6 +133,7 @@ func (h Header) Flag(flag int) bool {
 }
 
 type Song struct {
+	ID   string
 	Path string
 	Tag  *Tag
 }
@@ -143,6 +146,10 @@ func (s *Song) Load() error {
 	}
 
 	defer f.Close()
+
+	hash := md5.Sum([]byte(s.Path))
+
+	s.ID = hex.EncodeToString(hash[:])
 
 	/* read and parse the header */
 
@@ -197,6 +204,10 @@ func (s *Song) Load() error {
 	}
 
 	log.Printf("==\n%s\n", s.Path)
+
+	if err := s.Tag.ParseFrames(bytes.NewReader(frames)); err != nil {
+		return err
+	}
 
 	return s.Tag.ParseFrames(bytes.NewReader(frames))
 }
