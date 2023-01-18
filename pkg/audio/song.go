@@ -184,6 +184,10 @@ func (s *Song) Load() error {
 		},
 	}
 
+	if s.Tag.Header.Tag != "ID3" || s.Tag.Header.Revision < 2 {
+		return fmt.Errorf("error: tag version not supported; %s", s.Tag.Header.Version())
+	}
+
 	/* if an extended header is present, skip it */
 
 	if s.Tag.Header.Flag(ExtendedHeader) {
