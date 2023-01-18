@@ -68,8 +68,8 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		data := make([]byte, size)
 
 		if n, err := io.ReadFull(r, data); err != nil {
-			log.Fatalf("unexpected EOF; read %d / %d; %s\n", n, size, err)
-			break
+			log.Printf("unexpected EOF; read %d / %d; %s\n", n, size, err)
+			return err
 		}
 
 		log.Printf("GOT: %s (%d bytes); %b %b\n", id, size, header[8], header[9])
