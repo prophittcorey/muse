@@ -19,6 +19,7 @@ const (
 	FooterPresent     = 1 << 4
 
 	syncsafebytelen = 7
+	normbytelen     = 8
 )
 
 var (
@@ -62,8 +63,14 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 			break
 		}
 
+		bytelen := syncsafebytelen
+
+		if t.Header.Revision < 4 {
+			bytelen = normbytelen
+		}
+
 		id := string(header[0:4])
-		size := bytestoint(header[4:8], syncsafebytelen)
+		size := bytestoint(header[4:8], bytelen)
 
 		data := make([]byte, size)
 
@@ -88,25 +95,26 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 				41 50 49 43  //APIC
 				00 08 5A 04  //Frame Size
 				00 03        //Flags: Unsynchronisation | Data Length Indicator.
-				00 02 19 F5  //4 bytes data length
 
-				00           //1 byte text encoding (ISO-8859-1)
-				69 6D 61 67  //image/jpeg
-				65 2F 6A 70  // ”
-				65 67        // ”
+				Text encoding      $xx
+				MIME Type          <text string> $00
+				Picture Type       $xx
+				Description        <text string according to encoding> $00 (00)
+				Picture Data       <binary data>
 			*/
 
 			encoding := data[0]
 
+			mime, data, _ := bytes.Cut(data[1:], nullbyte)
+
+			pictype := data[0] /* special byte */
+
+			/* the description may need a double null according to the text encoding */
 			sep := nullbyte
 
 			if encoding == 1 || encoding == 2 {
 				sep = doublenull
 			}
-
-			mime, data, _ := bytes.Cut(data[1:], sep)
-
-			pictype := data[0] /* special byte */
 
 			description, data, _ := bytes.Cut(data[1:], sep)
 
