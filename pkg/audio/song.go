@@ -110,11 +110,6 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 				Type:        string(pictype),
 				Data:        data,
 			}
-
-			// For debugging purposes..
-			// f, _ := os.Create(fmt.Sprintf("/tmp/%s.png", "album"))
-			// f.Write(data)
-			// f.Close()
 		default:
 		}
 	}
