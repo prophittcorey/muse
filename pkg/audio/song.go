@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strings"
 	"unicode/utf16"
 	"unicode/utf8"
 )
@@ -70,6 +71,7 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		}
 
 		id := string(header[0:4])
+
 		size := bytestoint(header[4:8], bytelen)
 
 		data := make([]byte, size)
@@ -78,8 +80,6 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 			log.Printf("unexpected EOF; read %d / %d; %s\n", n, size, err)
 			return err
 		}
-
-		log.Printf("GOT: %s (%d bytes); %b %b\n", id, size, header[8], header[9])
 
 		switch id {
 		case "TALB":
@@ -242,7 +242,8 @@ func decode(bs []byte, encoding byte) string {
 			ret.Write(b8buf[:n])
 		}
 
-		return ret.String()
+		// HACK: Not sure why UTF16 strings in ID3v2.3 have a null terminator.
+		return strings.Replace(ret.String(), "\x00", "", -1)
 	default:
 		return ""
 	}
