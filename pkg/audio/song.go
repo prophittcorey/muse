@@ -98,11 +98,17 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 
 			encoding := data[0]
 
-			mime, data, _ := bytes.Cut(data[1:], nullbyte)
+			sep := nullbyte
+
+			if encoding == 1 || encoding == 2 {
+				sep = doublenull
+			}
+
+			mime, data, _ := bytes.Cut(data[1:], sep)
 
 			pictype := data[0] /* special byte */
 
-			description, data, _ := bytes.Cut(data[1:], nullbyte)
+			description, data, _ := bytes.Cut(data[1:], sep)
 
 			t.Picture = &Picture{
 				Description: decode(description, encoding),
