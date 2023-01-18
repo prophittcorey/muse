@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 )
 
+// TODO: Make sure the songs are unique...
 func Scan(globs ...string) []*Song {
 	files := []*Song{}
 

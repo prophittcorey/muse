@@ -32,7 +32,7 @@ func main() {
 	flag.StringVar(&host, "host", "127.0.0.1", "The host to run the server on (default: 127.0.0.1)")
 	flag.StringVar(&domain, "domain", "localhost", "The domain name for the server (default: localhost)")
 	flag.StringVar(&dir, "dir", ".", "A base directory to base the glob patterns from (default: .)")
-	flag.StringVar(&globs, "globs", "**/*.mp3", "A comma separated list of glob patterns (default: **/*.mp3)")
+	flag.StringVar(&globs, "globs", "*.mp3,**/*.mp3,**/**/*.mp3", "A comma separated list of glob patterns (default: **/*.mp3)")
 
 	flag.Parse()
 

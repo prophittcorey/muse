@@ -17,6 +17,13 @@ const (
 	ExtendedHeader    = 1 << 6
 	Experimental      = 1 << 5
 	FooterPresent     = 1 << 4
+
+	syncsafebytelen = 7
+)
+
+var (
+	nullbyte   = []byte{0}
+	doublenull = []byte{0, 0}
 )
 
 type Picture struct {
@@ -46,7 +53,7 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		Flags         $xx xx
 	*/
 
-	log.Printf("%s: %d bytes\n", t.Header.Version(), t.Header.Size)
+	log.Printf("%s: %d bytes, %b\n", t.Header.Version(), t.Header.Size, t.Header.Flags)
 
 	for {
 		header := make([]byte, 10)
@@ -56,15 +63,16 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		}
 
 		id := string(header[0:4])
-		size := (int(header[4]) << 24) | (int(header[5]) << 16) | (int(header[6]) << 8) | int(header[7])
+		size := bytestoint(header[4:8], syncsafebytelen)
+
 		data := make([]byte, size)
 
-		if _, err := io.ReadFull(r, data); err != nil {
+		if n, err := io.ReadFull(r, data); err != nil {
+			log.Fatalf("unexpected EOF; read %d / %d; %s\n", n, size, err)
 			break
 		}
 
-		log.Println("GOT: ", id, size)
-		// log.Println(decode(data[1:], data[0]))
+		log.Printf("GOT: %s (%d bytes); %b %b\n", id, size, header[8], header[9])
 
 		switch id {
 		case "TALB":
@@ -90,11 +98,11 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 
 			encoding := data[0]
 
-			mime, data, _ := bytes.Cut(data[1:], []byte{0})
+			mime, data, _ := bytes.Cut(data[1:], nullbyte)
 
 			pictype := data[0] /* special byte */
 
-			description, data, _ := bytes.Cut(data[1:], []byte{0})
+			description, data, _ := bytes.Cut(data[1:], nullbyte)
 
 			t.Picture = &Picture{
 				Description: decode(description, encoding),
@@ -163,7 +171,7 @@ func (s *Song) Load() error {
 			Revision: int(bs[3]),
 			Minor:    int(bs[4]),
 			Flags:    int(bs[5]),
-			Size:     (int(bs[6]) << 24) | (int(bs[7]) << 16) | (int(bs[8]) << 8) | int(bs[9]),
+			Size:     bytestoint(bs[6:10], syncsafebytelen),
 		},
 	}
 
@@ -176,7 +184,7 @@ func (s *Song) Load() error {
 			return err
 		}
 
-		totalsize := ((int(bs[0]) << 24) | (int(bs[1]) << 16) | (int(bs[2]) << 8) | int(bs[3])) - 6
+		totalsize := bytestoint(bs[0:4], syncsafebytelen)
 
 		if totalsize > 0 {
 			bs := make([]byte, totalsize)
@@ -184,6 +192,8 @@ func (s *Song) Load() error {
 			if _, err = io.ReadFull(f, bs); err != nil {
 				return err
 			}
+
+			s.Tag.Header.Size -= totalsize
 		}
 	}
 
@@ -191,17 +201,13 @@ func (s *Song) Load() error {
 
 	framelen := s.Tag.Header.Size
 
-	if s.Tag.Header.Flag(FooterPresent) {
-		framelen -= 10
-	}
-
 	frames := make([]byte, framelen)
 
 	if _, err = io.ReadFull(f, frames); err != nil {
 		return err
 	}
 
-	log.Printf("%s\n", s.Path)
+	log.Printf("%s (%d bytes)\n", s.Path, len(frames))
 
 	return s.Tag.ParseFrames(bytes.NewReader(frames))
 }
@@ -231,4 +237,14 @@ func decode(bs []byte, encoding byte) string {
 	default:
 		return ""
 	}
+}
+
+func bytestoint(bs []byte, bitlen int) int {
+	var i int
+
+	for _, b := range bs {
+		i = (i << bitlen) | int(b)
+	}
+
+	return i
 }
