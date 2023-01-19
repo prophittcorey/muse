@@ -13,7 +13,7 @@ func init() {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
 
-				for _, song := range Tracks {
+				for _, song := range tracks {
 					if song.ID == id {
 						// TODO: Write the MIME type? Faster lookup with a cache?
 						w.Write(song.Tag.Picture.Data)

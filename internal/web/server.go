@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	Tracks []*audio.Song
+	tracks []*audio.Song
 )
 
 type route struct {
@@ -39,9 +39,9 @@ func Serve(directory string, globs ...string) error {
 		patterns = append(patterns, fmt.Sprintf("%s/%s", directory, glob))
 	}
 
-	Tracks = audio.Scan(patterns...)
+	tracks = audio.Scan(patterns...)
 
-	if len(Tracks) == 0 {
+	if len(tracks) == 0 {
 		return fmt.Errorf("web: no music files were found")
 	}
 
