@@ -18,8 +18,8 @@ import (
 )
 
 var (
-	trackmap map[string]*audio.Song /* for lookups via ID */
-	tracks   []*audio.Song          /* complete collection of tracks */
+	trackmap map[string]*audio.Track /* for lookups via ID */
+	tracks   []*audio.Track          /* complete collection of tracks */
 )
 
 type route struct {
@@ -48,7 +48,7 @@ func Serve(directory string, globs ...string) error {
 		return fmt.Errorf("web: no music files were found")
 	}
 
-	trackmap = map[string]*audio.Song{}
+	trackmap = map[string]*audio.Track{}
 
 	for i := range tracks {
 		trackmap[tracks[i].ID] = tracks[i]

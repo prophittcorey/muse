@@ -147,14 +147,14 @@ func (h Header) Flag(flag int) bool {
 	return (h.Flags & flag) != 0
 }
 
-type Song struct {
+type Track struct {
 	ID   string
 	Path string
 	Tag  *Tag
 }
 
-func (s *Song) Load() error {
-	f, err := os.Open(s.Path)
+func (t *Track) Load() error {
+	f, err := os.Open(t.Path)
 
 	if err != nil {
 		return err
@@ -162,9 +162,9 @@ func (s *Song) Load() error {
 
 	defer f.Close()
 
-	hash := md5.Sum([]byte(s.Path))
+	hash := md5.Sum([]byte(t.Path))
 
-	s.ID = hex.EncodeToString(hash[:])
+	t.ID = hex.EncodeToString(hash[:])
 
 	/* read and parse the header */
 
@@ -174,7 +174,7 @@ func (s *Song) Load() error {
 		return err
 	}
 
-	s.Tag = &Tag{
+	t.Tag = &Tag{
 		Header: Header{
 			Tag:      string(bs[0:3]),
 			Revision: int(bs[3]),
@@ -184,13 +184,13 @@ func (s *Song) Load() error {
 		},
 	}
 
-	if s.Tag.Header.Tag != "ID3" || s.Tag.Header.Revision < 2 {
-		return fmt.Errorf("error: tag version not supported; %s", s.Tag.Header.Version())
+	if t.Tag.Header.Tag != "ID3" || t.Tag.Header.Revision < 2 {
+		return fmt.Errorf("error: tag version not supported; %s", t.Tag.Header.Version())
 	}
 
 	/* if an extended header is present, skip it */
 
-	if s.Tag.Header.Flag(ExtendedHeader) {
+	if t.Tag.Header.Flag(ExtendedHeader) {
 		bs := make([]byte, 6)
 
 		if _, err = io.ReadFull(f, bs); err != nil {
@@ -206,13 +206,13 @@ func (s *Song) Load() error {
 				return err
 			}
 
-			s.Tag.Header.Size -= totalsize
+			t.Tag.Header.Size -= totalsize
 		}
 	}
 
 	/* pull the tag frames out of the remaining portion of the file */
 
-	framelen := s.Tag.Header.Size
+	framelen := t.Tag.Header.Size
 
 	frames := make([]byte, framelen)
 
@@ -220,9 +220,9 @@ func (s *Song) Load() error {
 		return err
 	}
 
-	log.Printf("%s (%d bytes)\n", s.Path, len(frames))
+	log.Printf("%s (%d bytes)\n", t.Path, len(frames))
 
-	return s.Tag.ParseFrames(bytes.NewReader(frames))
+	return t.Tag.ParseFrames(bytes.NewReader(frames))
 }
 
 func decode(bs []byte, encoding byte) string {

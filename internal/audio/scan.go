@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 )
 
-func Scan(globs ...string) []*Song {
+func Scan(globs ...string) []*Track {
 	added := map[string]struct{}{}
 
-	files := []*Song{}
+	files := []*Track{}
 
 	for _, glob := range globs {
 		if matches, err := filepath.Glob(glob); err == nil {
@@ -21,7 +21,7 @@ func Scan(globs ...string) []*Song {
 
 				added[match] = struct{}{}
 
-				song := Song{Path: match}
+				song := Track{Path: match}
 
 				if err := song.Load(); err == nil {
 					files = append(files, &song)
