@@ -12,7 +12,7 @@ import (
 	"time"
 
 	"github.com/prophittcorey/muse"
-	"github.com/prophittcorey/muse/pkg/audio"
+	"github.com/prophittcorey/muse/internal/audio"
 )
 
 var (

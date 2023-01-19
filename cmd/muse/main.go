@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/prophittcorey/muse/internal/audio"
 	"github.com/prophittcorey/muse/internal/web"
-	"github.com/prophittcorey/muse/pkg/audio"
 )
 
 func setenv(key, value string) {
