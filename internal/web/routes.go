@@ -3,6 +3,7 @@ package web
 import (
 	"log"
 	"net/http"
+	"strings"
 )
 
 func init() {
@@ -29,6 +30,29 @@ func init() {
 						log.Printf("web: error rendering index page; %s", err)
 					}
 				}
+			default:
+				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			}
+		}),
+	})
+
+	// The thumbnails route is used to load embedded image assets if available. If one is not
+	// available a default image will be used.
+	routes.register(route{
+		Path: "/thumbnail/",
+		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
+			switch r.Method {
+			case "GET":
+				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
+
+				for _, song := range tracks {
+					if song.ID == id {
+						// TODO: Write the MIME type? Faster lookup with a cache?
+						w.Write(song.Tag.Picture.Data)
+					}
+				}
+
+				// TODO: Load a default image if none is available.
 			default:
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			}
