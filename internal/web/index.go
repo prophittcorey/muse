@@ -21,7 +21,8 @@ func init() {
 					http.NotFound(w, r)
 				} else {
 					data := map[string]interface{}{
-						"Collection": MusicCollection,
+						"Tracks":       MusicCollection,
+						"DefaultTrack": MusicCollection[0],
 					}
 
 					if err := templates.ExecuteTemplate(w, "pages/index.tmpl", data); err != nil {
