@@ -51,9 +51,9 @@ func main() {
 		patterns = append(patterns, fmt.Sprintf("%s/%s", dir, glob))
 	}
 
-	web.MusicCollection = audio.Scan(patterns...)
+	web.Tracks = audio.Scan(patterns...)
 
-	if len(web.MusicCollection) == 0 {
+	if len(web.Tracks) == 0 {
 		log.Fatalf("err: no music files were found for %s", globs)
 		return
 	}
