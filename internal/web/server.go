@@ -30,9 +30,25 @@ func (rs *routecollection) register(r route) {
 	*rs = append(*rs, r)
 }
 
-// ListenAndServce begins listening and responding to web requests. This
+// Serve will load audio from a directory using any number of file globs. This
 // function blocks.
-func ListenAndServe() error {
+func Serve(directory string, globs ...string) error {
+	patterns := []string{}
+
+	for _, glob := range globs {
+		patterns = append(patterns, fmt.Sprintf("%s/%s", directory, glob))
+	}
+
+	Tracks = audio.Scan(patterns...)
+
+	if len(Tracks) == 0 {
+		return fmt.Errorf("web: no music files were found")
+	}
+
+	return listenAndServe()
+}
+
+func listenAndServe() error {
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
 
 	mux := http.NewServeMux()

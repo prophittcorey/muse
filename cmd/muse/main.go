@@ -2,12 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 	"strings"
 
-	"github.com/prophittcorey/muse/internal/audio"
 	"github.com/prophittcorey/muse/internal/web"
 )
 
@@ -45,20 +43,7 @@ func main() {
 	setenv("PORT", port)
 	setenv("DOMAIN", domain)
 
-	patterns := []string{}
-
-	for _, glob := range strings.Split(globs, ",") {
-		patterns = append(patterns, fmt.Sprintf("%s/%s", dir, glob))
-	}
-
-	web.Tracks = audio.Scan(patterns...)
-
-	if len(web.Tracks) == 0 {
-		log.Fatalf("err: no music files were found for %s", globs)
-		return
-	}
-
-	if err := web.ListenAndServe(); err != nil {
+	if err := web.Serve(dir, strings.Split(globs, ",")...); err != nil {
 		log.Fatal(err)
 	}
 }
