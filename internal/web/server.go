@@ -17,11 +17,6 @@ import (
 	"github.com/prophittcorey/muse/internal/audio"
 )
 
-var (
-	trackmap map[string]*audio.Track /* for lookups via ID */
-	tracks   []*audio.Track          /* complete collection of tracks */
-)
-
 type route struct {
 	Path    string
 	Handler http.HandlerFunc
@@ -42,16 +37,8 @@ func Serve(directory string, globs ...string) error {
 		patterns = append(patterns, fmt.Sprintf("%s/%s", directory, glob))
 	}
 
-	tracks = audio.Scan(patterns...)
-
-	if len(tracks) == 0 {
+	if !audio.Scan(patterns...) {
 		return fmt.Errorf("web: no music files were found")
-	}
-
-	trackmap = map[string]*audio.Track{}
-
-	for i := range tracks {
-		trackmap[tracks[i].ID] = tracks[i]
 	}
 
 	return listenAndServe()

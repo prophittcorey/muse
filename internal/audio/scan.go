@@ -5,10 +5,39 @@ import (
 	"path/filepath"
 )
 
-func Scan(globs ...string) []*Track {
-	added := map[string]struct{}{}
+var (
+	Tracks = &TrackCollection{
+		lookup: map[string]*Track{},
+	}
+)
 
-	files := []*Track{}
+type TrackCollection struct {
+	lookup map[string]*Track
+	All    []*Track
+}
+
+// Insert adds a track to the collection.
+func (t *TrackCollection) Insert(audio *Track) {
+	if track := t.Find(audio.ID); track == nil {
+		Tracks.lookup[audio.ID] = audio
+		Tracks.All = append(Tracks.All, audio)
+	}
+}
+
+// Find returns a track via it's ID. This is an O(1) lookup. Nil is returned
+// if no track is found.
+func (t *TrackCollection) Find(id string) *Track {
+	if track, ok := t.lookup[id]; ok {
+		return track
+	}
+
+	return nil
+}
+
+// Scan looks for and loads audio tracks. Returns true if any tracks were
+// found and loaded.
+func Scan(globs ...string) bool {
+	added := map[string]struct{}{}
 
 	for _, glob := range globs {
 		if matches, err := filepath.Glob(glob); err == nil {
@@ -24,7 +53,7 @@ func Scan(globs ...string) []*Track {
 				song := Track{Path: match}
 
 				if err := song.Load(); err == nil {
-					files = append(files, &song)
+					Tracks.Insert(&song)
 				} else {
 					log.Printf("failed to load %s; %s\n", match, err)
 				}
@@ -32,5 +61,5 @@ func Scan(globs ...string) []*Track {
 		}
 	}
 
-	return files
+	return len(Tracks.All) > 0
 }

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/prophittcorey/muse"
+	"github.com/prophittcorey/muse/internal/audio"
 )
 
 func init() {
@@ -24,8 +25,8 @@ func init() {
 					http.NotFound(w, r)
 				} else {
 					data := map[string]interface{}{
-						"Tracks":       tracks,
-						"DefaultTrack": tracks[0],
+						"Tracks":       audio.Tracks.All,
+						"DefaultTrack": audio.Tracks.All[0],
 					}
 
 					if err := templates.ExecuteTemplate(w, "pages/index.tmpl", data); err != nil {
@@ -47,7 +48,7 @@ func init() {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
 
-				if t, ok := trackmap[id]; ok {
+				if t := audio.Tracks.Find(id); t != nil {
 					w.Write(t.Tag.Picture.Data)
 					return
 				}
