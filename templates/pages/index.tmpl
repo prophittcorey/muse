@@ -11,6 +11,8 @@
       <p>Loaded {{ len .Tracks }} tracks.</p>
       <p>Defaulting to {{ .DefaultTrack.Tag.Title }}</p>
     </main>
+
+    <script src="/assets/js/app.js?v={{ ran_at }}"></script>
   </body>
 </html>
 {{ end }}
