@@ -12,14 +12,14 @@
       <img src="/thumbnail/{{ .DefaultTrack.ID }}">
 
       <!-- Player Controls -->
-      <div>
+      <div class="player">
         <button>Play</button>
       </div>
 
       <!-- Track List -->
       <ol>
         {{ range $track := .Tracks }}
-          <li>{{ $track.Tag.Title }}</li>
+          <li data-id="{{ $track.ID }}">{{ $track.Tag.Title }}</li>
         {{ end }}
       </ol>
 
