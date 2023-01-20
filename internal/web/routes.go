@@ -39,6 +39,12 @@ func init() {
 		}),
 	})
 
+	defaultAlbumArt, err := muse.FS.ReadFile("assets/images/album.png")
+
+	if err != nil {
+		log.Printf("routes.go: failed to load default album art; %s\n", err)
+	}
+
 	// The thumbnails route is used to load embedded image assets if available. If one is not
 	// available a default image will be used.
 	routes.register(route{
@@ -53,7 +59,7 @@ func init() {
 					return
 				}
 
-				// TODO: Load a default image if none is available.
+				w.Write(defaultAlbumArt)
 			default:
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			}
