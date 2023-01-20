@@ -8,11 +8,23 @@
 
   <body>
     <main>
-      <p>Loaded {{ len .Tracks }} tracks.</p>
-      <p>Defaulting to {{ .DefaultTrack.Tag.Title }}</p>
-    </main>
+      <!-- Album Art -->
+      <img src="/thumbnail/{{ .DefaultTrack.ID }}">
 
-    <script src="/assets/js/app.js?v={{ ran_at }}"></script>
+      <!-- Player Controls -->
+      <div>
+        <button>Play</button>
+      </div>
+
+      <!-- Track List -->
+      <ol>
+        {{ range $track := .Tracks }}
+          <li>{{ $track.Tag.Title }}</li>
+        {{ end }}
+      </ol>
+
+      <script src="/assets/js/app.js?v={{ ran_at }}"></script>
+    </main>
   </body>
 </html>
 {{ end }}
