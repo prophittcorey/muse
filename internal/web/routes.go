@@ -66,6 +66,26 @@ func init() {
 		}),
 	})
 
+	// The track route will stream the actual music file given the ID.
+	routes.register(route{
+		Path: "/track/",
+		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
+			switch r.Method {
+			case "GET":
+				id := strings.TrimPrefix(r.URL.Path, "/track/")
+
+				if t := audio.Tracks.Find(id); t != nil {
+					http.ServeFile(w, r, t.Path)
+					return
+				}
+
+				http.NotFound(w, r)
+			default:
+				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			}
+		}),
+	})
+
 	// Handles all asset requests. Since we're embedding all assets into the
 	// binary we need to serve the assets from Go. If we were not, we could
 	// directly access the assets via Nginx/Apache and leave the application
