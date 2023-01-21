@@ -1,14 +1,13 @@
 (function (w, d){
   'use strict';
 
-  // TODO: Add an Audio element..
   // TODO: Try next/previous/play/pause actual audio.
-  // TODO: Make audio handler ("/audio/:id").
 
   var player = {
     state: {
       track: 0,
       tracks: d.querySelectorAll('main > ol > li'),
+      audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
     },
 
@@ -19,9 +18,11 @@
     actions: {
       play: function () {
         player.state.mode = 'playing';
+        player.state.audio.play();
       },
       pause: function () {
         player.state.mode = 'paused';
+        player.state.audio.pause();
       },
     },
   };
