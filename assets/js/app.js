@@ -1,6 +1,10 @@
 (function (w, d){
   'use strict';
 
+  // TODO: Add an Audio element..
+  // TODO: Try next/previous/play/pause actual audio.
+  // TODO: Make audio handler ("/audio/:id").
+
   var player = {
     state: {
       track: 0,
