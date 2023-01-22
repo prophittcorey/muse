@@ -3,6 +3,7 @@
 
   var player = {
     state: {
+      album: d.querySelector('main > img'),
       tracks: d.querySelectorAll('main > ol > li'),
       audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
@@ -30,6 +31,7 @@
       player.state.mode = 'paused';
       player.state.audio.pause();
       player.state.audio.src = `/track/${this.dataset.id}`;
+      player.state.album.src = `/thumbnail/${this.dataset.id}`;
       player.state.mode = 'playing';
       player.state.audio.play();
     });
