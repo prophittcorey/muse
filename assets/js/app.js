@@ -27,7 +27,11 @@
   /* add click handler for each track in the play list */
   player.state.tracks.forEach(function (track) {
     track.addEventListener('click', function () {
-      console.log(this.dataset.id);
+      player.state.mode = 'paused';
+      player.state.audio.pause();
+      player.state.audio.src = `/track/${this.dataset.id}`;
+      player.state.mode = 'playing';
+      player.state.audio.play();
     });
   });
 
