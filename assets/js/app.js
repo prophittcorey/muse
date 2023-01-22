@@ -1,11 +1,8 @@
 (function (w, d){
   'use strict';
 
-  // TODO: Try next/previous/play/pause actual audio.
-
   var player = {
     state: {
-      track: 0,
       tracks: d.querySelectorAll('main > ol > li'),
       audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
@@ -27,6 +24,14 @@
     },
   };
 
+  /* add click handler for each track in the play list */
+  player.state.tracks.forEach(function (track) {
+    track.addEventListener('click', function () {
+      console.log(this.dataset.id);
+    });
+  });
+
+  /* add click handlers for each player button */
   player.buttons.play.addEventListener('click', function () {
     if (player.state.mode === 'paused') {
       player.actions.play();
