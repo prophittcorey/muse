@@ -6,6 +6,7 @@
       album: d.querySelector('main > img'),
       track: 0,
       tracks: d.querySelectorAll('main > ol > li'),
+      playing: d.querySelector('p.now_playing'),
       audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
     },
@@ -26,6 +27,7 @@
 
         var track = player.state.tracks[player.state.track];
 
+        player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
         player.state.mode = 'paused';
         player.state.audio.pause();
         player.state.audio.src = `/track/${track.dataset.id}`;
@@ -43,6 +45,7 @@
 
         var track = player.state.tracks[player.state.track];
 
+        player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
         player.state.mode = 'paused';
         player.state.audio.pause();
         player.state.audio.src = `/track/${track.dataset.id}`;
@@ -70,6 +73,7 @@
       player.state.track = parseInt(this.dataset.index);
       player.state.mode = 'paused';
       player.state.audio.pause();
+      player.state.playing.innerText = `${this.dataset.artist} - ${this.dataset.title}`;
       player.state.audio.src = `/track/${this.dataset.id}`;
       player.state.album.src = `/thumbnail/${this.dataset.id}`;
       player.state.mode = 'playing';
