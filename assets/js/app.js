@@ -1,6 +1,18 @@
 (function (w, d){
   'use strict';
 
+  var callbacks = {
+    updateTitle: function (track) {
+      var title = d.querySelector('title');
+
+      title.innerText = `Muse - ${track.dataset.title}`;
+    },
+
+    logChange: function (track) {
+      console.log('Track chanegd to ', track.dataset.title);
+    },
+  };
+
   var player = {
     state: {
       album: d.querySelector('main > img'),
@@ -14,9 +26,8 @@
 
     callbacks: {
       'track_changed': [
-        function (track) {
-          console.log('Track chanegd to ', track.dataset.title);
-        },
+        callbacks.logChange,
+        callbacks.updateTitle,
       ],
     },
 
