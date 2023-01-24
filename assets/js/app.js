@@ -11,6 +11,10 @@
     logChange: function (track) {
       console.log('Track chanegd to ', track.dataset.title);
     },
+
+    playNext: function (track) {
+      player.actions.next();
+    }
   };
 
   var player = {
@@ -28,6 +32,9 @@
       'track_changed': [
         callbacks.logChange,
         callbacks.updateTitle,
+      ],
+      'track_ended': [
+        callbacks.playNext,
       ],
     },
 
@@ -134,6 +141,6 @@
 
   /* hook into audio events */
   player.state.audio.onended = function () {
-    player.actions.next();
+    player.actions.dispatch('track_ended', player.state.tracks[player.state.track]);
   };
 })(window, document)
