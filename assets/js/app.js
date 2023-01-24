@@ -12,6 +12,14 @@
       mode: 'paused',
     },
 
+    callbacks: {
+      'track_changed': [
+        function (track) {
+          console.log('Track chanegd to ', track.dataset.title);
+        },
+      ],
+    },
+
     buttons: {
       play: d.querySelector('.player > button.play'),
       next: d.querySelector('.player > button.next'),
@@ -19,6 +27,14 @@
     },
 
     actions: {
+      dispatch: function (eventName, track) {
+        if (player.callbacks[eventName]) {
+          player.callbacks[eventName].forEach(function (cb) {
+            cb(track);
+          });
+        }
+      },
+
       prev: function () {
         player.state.track -= 1;
 
@@ -36,6 +52,8 @@
         player.state.mode = 'playing';
         player.state.audio.play();
         player.buttons.play.innerHTML = 'Pause';
+
+        player.actions.dispatch('track_changed', track);
       },
       next: function () {
         player.state.track += 1;
@@ -58,6 +76,8 @@
         player.state.mode = 'playing';
         player.state.audio.play();
         player.buttons.play.innerHTML = 'Pause';
+
+        player.actions.dispatch('track_changed', track);
       },
       play: function () {
         player.state.mode = 'playing';
@@ -84,6 +104,8 @@
       player.state.mode = 'playing';
       player.state.audio.play();
       player.buttons.play.innerHTML = 'Pause';
+
+      player.actions.dispatch('track_changed', this);
     });
   });
 
