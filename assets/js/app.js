@@ -1,22 +1,6 @@
 (function (w, d){
   'use strict';
 
-  var callbacks = {
-    updateTitle: function (track) {
-      var title = d.querySelector('title');
-
-      title.innerText = `Muse - ${track.dataset.title}`;
-    },
-
-    logChange: function (track) {
-      console.log('Track chanegd to ', track.dataset.title);
-    },
-
-    playNext: function (track) {
-      player.actions.next();
-    }
-  };
-
   var player = {
     state: {
       album: d.querySelector('main > img'),
@@ -30,11 +14,18 @@
 
     callbacks: {
       'track_changed': [
-        callbacks.logChange,
-        callbacks.updateTitle,
+        function (track) {
+          console.log('Track chanegd to ', track.dataset.title);
+        },
+        function (track) {
+          var title = d.querySelector('title');
+          title.innerText = `Muse - ${track.dataset.title}`;
+        },
       ],
       'track_ended': [
-        callbacks.playNext,
+        function (track) {
+          player.actions.next();
+        },
       ],
     },
 
