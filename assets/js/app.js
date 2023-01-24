@@ -17,10 +17,12 @@
       play: function () {
         player.state.mode = 'playing';
         player.state.audio.play();
+        player.buttons.play.innerHTML = 'Pause';
       },
       pause: function () {
         player.state.mode = 'paused';
         player.state.audio.pause();
+        player.buttons.play.innerHTML = 'Play';
       },
     },
   };
@@ -34,6 +36,7 @@
       player.state.album.src = `/thumbnail/${this.dataset.id}`;
       player.state.mode = 'playing';
       player.state.audio.play();
+      player.buttons.play.innerHTML = 'Pause';
     });
   });
 
