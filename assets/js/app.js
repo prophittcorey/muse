@@ -39,7 +39,7 @@
       next: function () {
         player.state.track += 1;
 
-        if (player.state.track  >= player.state.tracks.length) {
+        if (player.state.track >= player.state.tracks.length) {
           player.state.track = 0;
         }
 
@@ -93,4 +93,9 @@
 
   player.buttons.prev.addEventListener('click', player.actions.prev);
   player.buttons.next.addEventListener('click', player.actions.next);
+
+  /* hook into audio events */
+  player.state.audio.onended = function () {
+    player.actions.next();
+  };
 })(window, document)
