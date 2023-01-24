@@ -8,18 +8,22 @@
 
   <body>
     <main>
+      <input type="hidden" name="current_track" value="{{ .DefaultTrack.ID }}">
+
       <!-- Album Art -->
       <img src="/thumbnail/{{ .DefaultTrack.ID }}" width="320">
 
       <!-- Player Controls -->
       <div class="player">
-        <button>Play</button>
+        <button class="prev">&lt;</button>
+        <button class="play">Play</button>
+        <button class="next">&gt;</button>
       </div>
 
       <!-- Track List -->
       <ol>
-        {{ range $track := .Tracks }}
-          <li data-id="{{ $track.ID }}">{{ $track.Tag.Title }}</li>
+        {{ range $index, $track := .Tracks }}
+          <li data-index="{{ $index }}" data-id="{{ $track.ID }}">{{ $track.Tag.Title }}</li>
         {{ end }}
       </ol>
 

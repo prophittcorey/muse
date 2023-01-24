@@ -54,7 +54,7 @@ func init() {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
 
-				if t := audio.Tracks.Find(id); t != nil {
+				if t := audio.Tracks.Find(id); t != nil && t.Tag.Picture != nil {
 					w.Write(t.Tag.Picture.Data)
 					return
 				}
