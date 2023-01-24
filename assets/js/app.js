@@ -7,6 +7,7 @@
       track: 0,
       tracks: d.querySelectorAll('main > ol > li'),
       playing: d.querySelector('p.now_playing'),
+      shuffle: d.querySelector('input[name="shuffle"]'),
       audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
     },
@@ -41,6 +42,10 @@
 
         if (player.state.track >= player.state.tracks.length) {
           player.state.track = 0;
+        }
+
+        if (player.state.shuffle.checked) {
+          player.state.track = Math.floor(Math.random() * player.state.tracks.length);
         }
 
         var track = player.state.tracks[player.state.track];

@@ -23,6 +23,11 @@
         <button class="next">&gt;</button>
       </div>
 
+      <p>
+        <input type="checkbox" id="shuffle" name="shuffle">
+        <label for="shuffle"> Shuffle</label>
+      </p>
+
       <!-- Track List -->
       <ol>
         {{ range $index, $track := .Tracks }}
