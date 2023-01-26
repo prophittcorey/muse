@@ -35,6 +35,7 @@
       tracks: this.root.querySelectorAll('ol > li'),
       playing: this.root.querySelector('p.now_playing'),
       shuffle: this.root.querySelector('input[name="shuffle"]'),
+      repeat: this.root.querySelector('input[name="repeat"]'),
       position: this.root.querySelector('.current_pos'),
       duration: this.root.querySelector('.duration'),
       progress: this.root.querySelector('input[name="progress"]'),
@@ -108,6 +109,10 @@
       },
 
       move: function (direction) {
+        if (_player.state.repeat.checked) {
+          direction = 0
+        }
+
         _player.state.track += direction;
 
         if (_player.state.track < 0) {

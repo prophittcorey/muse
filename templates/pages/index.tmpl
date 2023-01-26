@@ -32,6 +32,11 @@
           <label for="shuffle"> Shuffle</label>
         </p>
 
+        <p>
+          <input type="checkbox" id="repeat" name="repeat">
+          <label for="repeat"> Repeat</label>
+        </p>
+
         <!-- Track List -->
         <ol>
           {{ range $index, $track := .Tracks }}
