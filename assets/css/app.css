@@ -51,3 +51,11 @@ ol {
   width: max-content;
   border: 1px solid #666;
 }
+
+ol > li:hover {
+  background-color: #cbcbcb !important;
+}
+
+ol > li:nth-child(odd) {
+  background-color: #ebebeb;
+}
