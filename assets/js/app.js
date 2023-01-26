@@ -19,21 +19,27 @@
     return `${minutes}:${seconds}`;
   }
 
-  var player = {
-    state: {
-      album: d.querySelector('main > img'),
-      track: 0,
-      tracks: d.querySelectorAll('main > ol > li'),
-      playing: d.querySelector('p.now_playing'),
-      shuffle: d.querySelector('input[name="shuffle"]'),
-      position: d.querySelector('.current_pos'),
-      duration: d.querySelector('.duration'),
-      progress: d.querySelector('input[name="progress"]'),
-      audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
-      mode: 'paused',
-    },
+  var Player = function (player) {
+    var that = this;
 
-    callbacks: {
+    this.root = player;
+
+    var defaultTrackID = this.root.querySelector('ol > li').dataset.id;
+
+    this.state = {
+      mode: 'paused',
+      track: 0,
+      album: this.root.querySelector('img'),
+      tracks: this.root.querySelectorAll('ol > li'),
+      playing: this.root.querySelector('p.now_playing'),
+      shuffle: this.root.querySelector('input[name="shuffle"]'),
+      position: this.root.querySelector('.current_pos'),
+      duration: this.root.querySelector('.duration'),
+      progress: this.root.querySelector('input[name="progress"]'),
+      audio: new Audio(`/track/${defaultTrackID}`),
+    };
+
+    this.callbacks = {
       'track_changed': [
         function (track) {
           console.log('Track chanegd to ', track.dataset.title);
@@ -45,171 +51,173 @@
       ],
       'track_ended': [
         function (track) {
-          player.actions.next();
+          that.actions.next();
         },
       ],
       'track_loaded': [
         function (track) {
-          player.state.position.innerText = prettyprint(player.state.audio.currentTime);
-          player.state.duration.innerText = prettyprint(player.state.audio.duration);
+          that.state.position.innerText = prettyprint(that.state.audio.currentTime);
+          that.state.duration.innerText = prettyprint(that.state.audio.duration);
 
-          player.state.progress.max = player.state.audio.duration;
-          player.state.progress.value = player.state.audio.currentTime;
+          that.state.progress.max = that.state.audio.duration;
+          that.state.progress.value = that.state.audio.currentTime;
         },
       ],
       'time_update': [
         function (track) {
-          player.state.position.innerText = prettyprint(player.state.audio.currentTime);
-          player.state.duration.innerText = prettyprint(player.state.audio.duration);
+          that.state.position.innerText = prettyprint(that.state.audio.currentTime);
+          that.state.duration.innerText = prettyprint(that.state.audio.duration);
 
-          player.state.progress.max = player.state.audio.duration;
-          player.state.progress.value = player.state.audio.currentTime;
+          that.state.progress.max = that.state.audio.duration;
+          that.state.progress.value = that.state.audio.currentTime;
         },
       ],
-    },
+    };
 
-    buttons: {
-      play: d.querySelector('.player > button.play'),
-      next: d.querySelector('.player > button.next'),
-      prev: d.querySelector('.player > button.prev'),
-      skip_back: d.querySelector('.player > button.skip_back'),
-      skip_forward: d.querySelector('.player > button.skip_forward'),
-    },
+    this.buttons = {
+      play: this.root.querySelector('.player > button.play'),
+      next: this.root.querySelector('.player > button.next'),
+      prev: this.root.querySelector('.player > button.prev'),
+      skip_back: this.root.querySelector('.player > button.skip_back'),
+      skip_forward: this.root.querySelector('.player > button.skip_forward'),
+    };
 
-    actions: {
+    this.actions = {
       dispatch: function (eventName, track) {
-        if (player.callbacks[eventName]) {
-          player.callbacks[eventName].forEach(function (cb) {
+        if (that.callbacks[eventName]) {
+          that.callbacks[eventName].forEach(function (cb) {
             cb(track);
           });
         }
       },
 
       skip_back: function () {
-        var t = player.state.audio.currentTime - 15;
+        var t = that.state.audio.currentTime - 15;
 
         if (t < 0) {
           t = 0;
         }
 
-        player.state.position.innerText = t;
-        player.state.audio.currentTime = t;
+        that.state.position.innerText = t;
+        that.state.audio.currentTime = t;
       },
 
       skip_forward: function () {
-        var t = player.state.audio.currentTime + 15;
+        var t = that.state.audio.currentTime + 15;
 
-        if (t > player.state.audio.duration) {
-          t = player.state.audio.duration;
+        if (t > that.state.audio.duration) {
+          t = that.state.audio.duration;
         }
 
-        player.state.position.innerText = t;
-        player.state.audio.currentTime = t;
+        that.state.position.innerText = t;
+        that.state.audio.currentTime = t;
       },
 
       prev: function () {
-        player.state.track -= 1;
+        that.state.track -= 1;
 
-        if (player.state.track < 0) {
-          player.state.track = player.state.tracks.length - 1;
+        if (that.state.track < 0) {
+          that.state.track = that.state.tracks.length - 1;
         }
 
-        var track = player.state.tracks[player.state.track];
+        var track = that.state.tracks[that.state.track];
 
-        player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
-        player.state.mode = 'paused';
-        player.state.audio.pause();
-        player.state.audio.src = `/track/${track.dataset.id}`;
-        player.state.album.src = `/thumbnail/${track.dataset.id}`;
-        player.state.mode = 'playing';
-        player.state.audio.play();
-        player.buttons.play.innerHTML = 'Pause';
+        that.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
+        that.state.mode = 'paused';
+        that.state.audio.pause();
+        that.state.audio.src = `/track/${track.dataset.id}`;
+        that.state.album.src = `/thumbnail/${track.dataset.id}`;
+        that.state.mode = 'playing';
+        that.state.audio.play();
+        that.buttons.play.innerHTML = 'Pause';
 
-        player.actions.dispatch('track_changed', track);
+        that.actions.dispatch('track_changed', track);
       },
       next: function () {
-        player.state.track += 1;
+        that.state.track += 1;
 
-        if (player.state.track >= player.state.tracks.length) {
-          player.state.track = 0;
+        if (that.state.track >= that.state.tracks.length) {
+          that.state.track = 0;
         }
 
-        if (player.state.shuffle.checked) {
-          player.state.track = Math.floor(Math.random() * player.state.tracks.length);
+        if (that.state.shuffle.checked) {
+          that.state.track = Math.floor(Math.random() * that.state.tracks.length);
         }
 
-        var track = player.state.tracks[player.state.track];
+        var track = that.state.tracks[that.state.track];
 
-        player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
-        player.state.mode = 'paused';
-        player.state.audio.pause();
-        player.state.audio.src = `/track/${track.dataset.id}`;
-        player.state.album.src = `/thumbnail/${track.dataset.id}`;
-        player.state.mode = 'playing';
-        player.state.audio.play();
-        player.buttons.play.innerHTML = 'Pause';
+        that.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
+        that.state.mode = 'paused';
+        that.state.audio.pause();
+        that.state.audio.src = `/track/${track.dataset.id}`;
+        that.state.album.src = `/thumbnail/${track.dataset.id}`;
+        that.state.mode = 'playing';
+        that.state.audio.play();
+        that.buttons.play.innerHTML = 'Pause';
 
-        player.actions.dispatch('track_changed', track);
+        that.actions.dispatch('track_changed', track);
       },
       play: function () {
-        player.state.mode = 'playing';
-        player.state.audio.play();
-        player.buttons.play.innerHTML = 'Pause';
+        that.state.mode = 'playing';
+        that.state.audio.play();
+        that.buttons.play.innerHTML = 'Pause';
       },
       pause: function () {
-        player.state.mode = 'paused';
-        player.state.audio.pause();
-        player.buttons.play.innerHTML = 'Play';
+        that.state.mode = 'paused';
+        that.state.audio.pause();
+        that.buttons.play.innerHTML = 'Play';
       },
-    },
-  };
+    };
 
-  /* add click handler for each track in the play list */
-  player.state.tracks.forEach(function (track) {
-    track.addEventListener('click', function () {
-      player.state.track = parseInt(this.dataset.index);
-      player.state.mode = 'paused';
-      player.state.audio.pause();
-      player.state.playing.innerText = `${this.dataset.artist} - ${this.dataset.title}`;
-      player.state.audio.src = `/track/${this.dataset.id}`;
-      player.state.album.src = `/thumbnail/${this.dataset.id}`;
-      player.state.mode = 'playing';
-      player.state.audio.play();
-      player.buttons.play.innerHTML = 'Pause';
+    /* add click handler for each track in the play list */
+    this.state.tracks.forEach(function (track) {
+      track.addEventListener('click', function () {
+        that.state.track = parseInt(this.dataset.index);
+        that.state.mode = 'paused';
+        that.state.audio.pause();
+        that.state.playing.innerText = `${this.dataset.artist} - ${this.dataset.title}`;
+        that.state.audio.src = `/track/${this.dataset.id}`;
+        that.state.album.src = `/thumbnail/${this.dataset.id}`;
+        that.state.mode = 'playing';
+        that.state.audio.play();
+        that.buttons.play.innerHTML = 'Pause';
 
-      player.actions.dispatch('track_changed', this);
+        that.actions.dispatch('track_changed', this);
+      });
     });
-  });
 
-  /* add click handlers for each player button */
-  player.buttons.play.addEventListener('click', function () {
-    if (player.state.mode === 'paused') {
-      player.actions.play();
-    } else {
-      player.actions.pause();
-    }
-  });
+    /* add click handlers for each player button */
+    this.buttons.play.addEventListener('click', function () {
+      if (that.state.mode === 'paused') {
+        that.actions.play();
+      } else {
+        that.actions.pause();
+      }
+    });
 
-  player.buttons.skip_back.addEventListener('click', player.actions.skip_back);
-  player.buttons.prev.addEventListener('click', player.actions.prev);
-  player.buttons.next.addEventListener('click', player.actions.next);
-  player.buttons.skip_forward.addEventListener('click', player.actions.skip_forward);
+    that.buttons.skip_back.addEventListener('click', that.actions.skip_back);
+    that.buttons.prev.addEventListener('click', that.actions.prev);
+    that.buttons.next.addEventListener('click', that.actions.next);
+    that.buttons.skip_forward.addEventListener('click', that.actions.skip_forward);
 
-  /* hook into audio events */
-  player.state.audio.onloadedmetadata = function () {
-    player.actions.dispatch('track_loaded', player.state.tracks[player.state.track]);
-  };
+    /* hook into audio events */
+    that.state.audio.onloadedmetadata = function () {
+      that.actions.dispatch('track_loaded', that.state.tracks[that.state.track]);
+    };
 
-  player.state.audio.ontimeupdate = function () {
-    player.actions.dispatch('time_update', player.state.tracks[player.state.track]);
-  };
+    that.state.audio.ontimeupdate = function () {
+      that.actions.dispatch('time_update', that.state.tracks[that.state.track]);
+    };
 
-  player.state.audio.onended = function () {
-    player.actions.dispatch('track_ended', player.state.tracks[player.state.track]);
-  };
+    that.state.audio.onended = function () {
+      that.actions.dispatch('track_ended', that.state.tracks[that.state.track]);
+    };
 
-  player.state.progress.onchange = function () {
-    player.state.position.innerText = this.value;
-    player.state.audio.currentTime = this.value;
-  };
+    that.state.progress.onchange = function () {
+      that.state.position.innerText = this.value;
+      that.state.audio.currentTime = this.value;
+    };
+  }
+
+  var player = new Player(d.querySelector('#player'));
 })(window, document)

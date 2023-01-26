@@ -8,37 +8,38 @@
 
   <body>
     <main>
-      <!-- Album Art -->
-      <img src="/thumbnail/{{ .DefaultTrack.ID }}" width="320">
+      <div id="player">
+        <!-- Album Art -->
+        <img src="/thumbnail/{{ .DefaultTrack.ID }}" width="320">
 
-      <!-- Now Playing -->
-      <p class="now_playing">{{ .DefaultTrack.Tag.Artist }} - {{ .DefaultTrack.Tag.Title }}</p>
+        <!-- Now Playing -->
+        <p class="now_playing">{{ .DefaultTrack.Tag.Artist }} - {{ .DefaultTrack.Tag.Title }}</p>
 
-      <input type="range" min="0" max="100" value="0" class="slider" name="progress">
-      <p><span class="current_pos"></span> / <span class="duration"></span></p>
+        <input type="range" min="0" max="100" value="0" class="slider" name="progress">
+        <p><span class="current_pos"></span> / <span class="duration"></span></p>
 
-      <!-- Player Controls -->
-      <div class="player">
-        <button class="skip_back">«</button>
-        <button class="prev">&lt;</button>
-        <button class="play">Play</button>
-        <button class="next">&gt;</button>
-        <button class="skip_forward">»</button>
+        <!-- Player Controls -->
+        <div class="player">
+          <button class="skip_back">«</button>
+          <button class="prev">&lt;</button>
+          <button class="play">Play</button>
+          <button class="next">&gt;</button>
+          <button class="skip_forward">»</button>
+        </div>
+
+        <p>
+          <input type="checkbox" id="shuffle" name="shuffle">
+          <label for="shuffle"> Shuffle</label>
+        </p>
+
+        <!-- Track List -->
+        <ol>
+          {{ range $index, $track := .Tracks }}
+            <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} {{ $track.Tag.Title }}</li>
+          {{ end }}
+        </ol>
+        <script src="/assets/js/app.js?v={{ ran_at }}"></script>
       </div>
-
-      <p>
-        <input type="checkbox" id="shuffle" name="shuffle">
-        <label for="shuffle"> Shuffle</label>
-      </p>
-
-      <!-- Track List -->
-      <ol>
-        {{ range $index, $track := .Tracks }}
-          <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} {{ $track.Tag.Title }}</li>
-        {{ end }}
-      </ol>
-
-      <script src="/assets/js/app.js?v={{ ran_at }}"></script>
     </main>
   </body>
 </html>
