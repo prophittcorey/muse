@@ -44,17 +44,11 @@
 
     this.callbacks = {
       'track_changed': [
-        function (track) {
-          console.log('Track chanegd to ', track.dataset.title);
-        },
-        function (track) {
-          _player.state.title.innerText = `Muse - ${track.dataset.title}`;
-        },
+        function (track) { console.log('Track chanegd to ', track.dataset.title);           },
+        function (track) { _player.state.title.innerText = `Muse - ${track.dataset.title}`; },
       ],
       'track_ended': [
-        function (track) {
-          _player.actions.next();
-        },
+        function (track) { _player.actions.move(1); },
       ],
       'track_loaded': [
         function (track) {
@@ -93,8 +87,8 @@
         }
       },
 
-      skip_back: function () {
-        var t = _player.state.audio.currentTime - 15;
+      skip: function (seconds) {
+        var t = _player.state.audio.currentTime + seconds;
 
         if (t < 0) {
           t = 0;
@@ -104,39 +98,12 @@
         _player.state.audio.currentTime = t;
       },
 
-      skip_forward: function () {
-        var t = _player.state.audio.currentTime + 15;
-
-        if (t > _player.state.audio.duration) {
-          t = _player.state.audio.duration;
-        }
-
-        _player.state.position.innerText = t;
-        _player.state.audio.currentTime = t;
-      },
-
-      prev: function () {
-        _player.state.track -= 1;
+      move: function (direction) {
+        _player.state.track += direction;
 
         if (_player.state.track < 0) {
           _player.state.track = _player.state.tracks.length - 1;
         }
-
-        var track = _player.state.tracks[_player.state.track];
-
-        _player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
-        _player.state.mode = 'paused';
-        _player.state.audio.pause();
-        _player.state.audio.src = `/track/${track.dataset.id}`;
-        _player.state.album.src = `/thumbnail/${track.dataset.id}`;
-        _player.state.mode = 'playing';
-        _player.state.audio.play();
-        _player.buttons.play.innerHTML = 'Pause';
-
-        _player.actions.dispatch('track_changed', track);
-      },
-      next: function () {
-        _player.state.track += 1;
 
         if (_player.state.track >= _player.state.tracks.length) {
           _player.state.track = 0;
@@ -159,11 +126,13 @@
 
         _player.actions.dispatch('track_changed', track);
       },
+
       play: function () {
         _player.state.mode = 'playing';
         _player.state.audio.play();
         _player.buttons.play.innerHTML = 'Pause';
       },
+
       pause: function () {
         _player.state.mode = 'paused';
         _player.state.audio.pause();
@@ -190,17 +159,13 @@
 
     /* add click handlers for each player button */
     this.buttons.play.addEventListener('click', function () {
-      if (_player.state.mode === 'paused') {
-        _player.actions.play();
-      } else {
-        _player.actions.pause();
-      }
+      _player.state.mode === 'paused' ? _player.actions.play() : _player.actions.pause();
     });
 
-    _player.buttons.skip_back.addEventListener('click', _player.actions.skip_back);
-    _player.buttons.prev.addEventListener('click', _player.actions.prev);
-    _player.buttons.next.addEventListener('click', _player.actions.next);
-    _player.buttons.skip_forward.addEventListener('click', _player.actions.skip_forward);
+    _player.buttons.prev.addEventListener('click',         function () { _player.actions.move(-1);  });
+    _player.buttons.next.addEventListener('click',         function () { _player.actions.move(1);   });
+    _player.buttons.skip_back.addEventListener('click',    function () { _player.actions.skip(-15); });
+    _player.buttons.skip_forward.addEventListener('click', function () { _player.actions.skip(15);  });
 
     /* hook into audio events */
     _player.state.audio.onloadedmetadata = function () {
@@ -219,7 +184,7 @@
       _player.state.position.innerText = this.value;
       _player.state.audio.currentTime = this.value;
     };
-  }
+  };
 
-  var player = new Player(d.querySelector('#player'));
+  new Player(d.querySelector('#player'));
 })(window, document)
