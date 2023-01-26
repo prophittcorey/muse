@@ -181,4 +181,9 @@
   player.state.audio.onended = function () {
     player.actions.dispatch('track_ended', player.state.tracks[player.state.track]);
   };
+
+  player.state.progress.onchange = function () {
+    player.state.position.innerText = this.value;
+    player.state.audio.currentTime = this.value;
+  };
 })(window, document)
