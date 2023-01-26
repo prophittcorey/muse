@@ -52,12 +52,18 @@
         function (track) {
           player.state.position.innerText = prettyprint(player.state.audio.currentTime);
           player.state.duration.innerText = prettyprint(player.state.audio.duration);
+
+          player.state.progress.max = player.state.audio.duration;
+          player.state.progress.value = player.state.audio.currentTime;
         },
       ],
       'time_update': [
         function (track) {
           player.state.position.innerText = prettyprint(player.state.audio.currentTime);
           player.state.duration.innerText = prettyprint(player.state.audio.duration);
+
+          player.state.progress.max = player.state.audio.duration;
+          player.state.progress.value = player.state.audio.currentTime;
         },
       ],
     },
