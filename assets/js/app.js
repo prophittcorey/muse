@@ -1,6 +1,24 @@
 (function (w, d){
   'use strict';
 
+  function prettyprint(seconds) {
+    var mins = Math.floor(seconds / 60);
+
+    var minutes = mins.toLocaleString('en-US', {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+
+    var secs = Math.floor(seconds - (minutes * 60));
+
+    var seconds = secs.toLocaleString('en-US', {
+      minimumIntegerDigits: 2,
+      useGrouping: false
+    });
+
+    return `${minutes}:${seconds}`;
+  }
+
   var player = {
     state: {
       album: d.querySelector('main > img'),
@@ -8,6 +26,9 @@
       tracks: d.querySelectorAll('main > ol > li'),
       playing: d.querySelector('p.now_playing'),
       shuffle: d.querySelector('input[name="shuffle"]'),
+      position: d.querySelector('.current_pos'),
+      duration: d.querySelector('.duration'),
+      progress: d.querySelector('input[name="progress"]'),
       audio: new Audio(`/track/${d.querySelector('main > ol > li').dataset.id}`),
       mode: 'paused',
     },
@@ -29,20 +50,14 @@
       ],
       'track_loaded': [
         function (track) {
-          var pos = d.querySelector('.current_pos');
-          var dur = d.querySelector('.duration');
-
-          pos.innerText = player.state.audio.currentTime;
-          dur.innerText = player.state.audio.duration;
+          player.state.position.innerText = prettyprint(player.state.audio.currentTime);
+          player.state.duration.innerText = prettyprint(player.state.audio.duration);
         },
       ],
       'time_update': [
         function (track) {
-          var pos = d.querySelector('.current_pos');
-          var dur = d.querySelector('.duration');
-
-          pos.innerText = player.state.audio.currentTime;
-          dur.innerText = player.state.audio.duration;
+          player.state.position.innerText = prettyprint(player.state.audio.currentTime);
+          player.state.duration.innerText = prettyprint(player.state.audio.duration);
         },
       ],
     },

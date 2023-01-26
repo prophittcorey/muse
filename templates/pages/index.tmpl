@@ -16,6 +16,7 @@
       <!-- Now Playing -->
       <p class="now_playing">{{ .DefaultTrack.Tag.Artist }} - {{ .DefaultTrack.Tag.Title }}</p>
 
+      <input type="range" min="0" max="100" value="0" class="slider" name="progress">
       <p><span class="current_pos"></span> / <span class="duration"></span></p>
 
       <!-- Player Controls -->
