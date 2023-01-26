@@ -1,7 +1,9 @@
 (function (w, d){
   'use strict';
 
-  function prettyprint(seconds) {
+  /* Takes a number of seconds and formats into a human readable form like,
+   * 90s -> "01:30" */
+  function timefmt(seconds) {
     var mins = Math.floor(seconds / 60);
 
     var minutes = mins.toLocaleString('en-US', {
@@ -19,6 +21,8 @@
     return `${minutes}:${seconds}`;
   }
 
+  /* Player is the music player component. The only argument is the root element
+   * to mount the player. */
   var Player = function (player) {
     var that = this;
 
@@ -56,8 +60,8 @@
       ],
       'track_loaded': [
         function (track) {
-          that.state.position.innerText = prettyprint(that.state.audio.currentTime);
-          that.state.duration.innerText = prettyprint(that.state.audio.duration);
+          that.state.position.innerText = timefmt(that.state.audio.currentTime);
+          that.state.duration.innerText = timefmt(that.state.audio.duration);
 
           that.state.progress.max = that.state.audio.duration;
           that.state.progress.value = that.state.audio.currentTime;
@@ -65,8 +69,8 @@
       ],
       'time_update': [
         function (track) {
-          that.state.position.innerText = prettyprint(that.state.audio.currentTime);
-          that.state.duration.innerText = prettyprint(that.state.audio.duration);
+          that.state.position.innerText = timefmt(that.state.audio.currentTime);
+          that.state.duration.innerText = timefmt(that.state.audio.duration);
 
           that.state.progress.max = that.state.audio.duration;
           that.state.progress.value = that.state.audio.currentTime;
