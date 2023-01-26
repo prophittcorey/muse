@@ -3,6 +3,8 @@ package audio
 import (
 	"log"
 	"path/filepath"
+	"sort"
+	"strings"
 )
 
 var (
@@ -60,6 +62,10 @@ func Scan(globs ...string) bool {
 			}
 		}
 	}
+
+	sort.Slice(Tracks.All, func(a, b int) bool {
+		return strings.Compare(Tracks.All[a].Tag.Artist, Tracks.All[b].Tag.Artist) < 0
+	})
 
 	return len(Tracks.All) > 0
 }
