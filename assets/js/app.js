@@ -58,6 +58,15 @@
           _player.state.progress.max = _player.state.audio.duration;
           _player.state.progress.value = _player.state.audio.currentTime;
         },
+        function (track) {
+          d.querySelectorAll('.active').forEach(function (el) {
+            el.classList.remove('active');
+          });
+
+          if (!track.classList.contains('active')) {
+            track.classList.add('active');
+          }
+        },
       ],
       'time_update': [
         function (track) {

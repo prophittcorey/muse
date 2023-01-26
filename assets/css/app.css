@@ -59,3 +59,7 @@ ol > li:hover {
 ol > li:nth-child(odd) {
   background-color: #ebebeb;
 }
+
+ol > li.active {
+  background-color: cornflowerblue !important;
+}
