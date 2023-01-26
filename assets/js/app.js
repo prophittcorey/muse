@@ -27,6 +27,24 @@
           player.actions.next();
         },
       ],
+      'track_loaded': [
+        function (track) {
+          var pos = d.querySelector('.current_pos');
+          var dur = d.querySelector('.duration');
+
+          pos.innerText = player.state.audio.currentTime;
+          dur.innerText = player.state.audio.duration;
+        },
+      ],
+      'time_update': [
+        function (track) {
+          var pos = d.querySelector('.current_pos');
+          var dur = d.querySelector('.duration');
+
+          pos.innerText = player.state.audio.currentTime;
+          dur.innerText = player.state.audio.duration;
+        },
+      ],
     },
 
     buttons: {
@@ -131,6 +149,14 @@
   player.buttons.next.addEventListener('click', player.actions.next);
 
   /* hook into audio events */
+  player.state.audio.onloadedmetadata = function () {
+    player.actions.dispatch('track_loaded', player.state.tracks[player.state.track]);
+  };
+
+  player.state.audio.ontimeupdate = function () {
+    player.actions.dispatch('time_update', player.state.tracks[player.state.track]);
+  };
+
   player.state.audio.onended = function () {
     player.actions.dispatch('track_ended', player.state.tracks[player.state.track]);
   };
