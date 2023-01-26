@@ -72,6 +72,8 @@
       play: d.querySelector('.player > button.play'),
       next: d.querySelector('.player > button.next'),
       prev: d.querySelector('.player > button.prev'),
+      skip_back: d.querySelector('.player > button.skip_back'),
+      skip_forward: d.querySelector('.player > button.skip_forward'),
     },
 
     actions: {
@@ -81,6 +83,28 @@
             cb(track);
           });
         }
+      },
+
+      skip_back: function () {
+        var t = player.state.audio.currentTime - 15;
+
+        if (t < 0) {
+          t = 0;
+        }
+
+        player.state.position.innerText = t;
+        player.state.audio.currentTime = t;
+      },
+
+      skip_forward: function () {
+        var t = player.state.audio.currentTime + 15;
+
+        if (t > player.state.audio.duration) {
+          t = player.state.audio.duration;
+        }
+
+        player.state.position.innerText = t;
+        player.state.audio.currentTime = t;
       },
 
       prev: function () {
@@ -166,8 +190,10 @@
     }
   });
 
+  player.buttons.skip_back.addEventListener('click', player.actions.skip_back);
   player.buttons.prev.addEventListener('click', player.actions.prev);
   player.buttons.next.addEventListener('click', player.actions.next);
+  player.buttons.skip_forward.addEventListener('click', player.actions.skip_forward);
 
   /* hook into audio events */
   player.state.audio.onloadedmetadata = function () {
