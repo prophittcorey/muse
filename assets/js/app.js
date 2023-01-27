@@ -146,13 +146,13 @@
       play: function () {
         _player.state.mode = 'playing';
         _player.state.audio.play();
-        _player.buttons.play.innerHTML = 'Pause';
+        _player.buttons.play.querySelector('img').src = '/assets/images/pause.svg';
       },
 
       pause: function () {
         _player.state.mode = 'paused';
         _player.state.audio.pause();
-        _player.buttons.play.innerHTML = 'Play';
+        _player.buttons.play.querySelector('img').src = '/assets/images/play.svg';
       },
     };
 
