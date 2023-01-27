@@ -54,6 +54,10 @@
       ],
       'track_loaded': [
         function (track) {
+          if (isNaN(_player.state.audio.duration) || isNaN(_player.state.audio.currentTime)) {
+            return;
+          }
+
           _player.state.position.innerText = timefmt(_player.state.audio.currentTime);
           _player.state.duration.innerText = timefmt(_player.state.audio.duration);
 
@@ -72,6 +76,10 @@
       ],
       'time_update': [
         function (track) {
+          if (isNaN(_player.state.audio.duration) || isNaN(_player.state.audio.currentTime)) {
+            return;
+          }
+
           _player.state.position.innerText = timefmt(_player.state.audio.currentTime);
           _player.state.duration.innerText = timefmt(_player.state.audio.duration);
 

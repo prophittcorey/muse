@@ -96,6 +96,7 @@ button {
 .player > .tracker {
   display: flex;
   align-items: center;
+  width: 100%;
 }
 
 .player > .tracker > span {
@@ -105,6 +106,7 @@ button {
 
 .player > .tracker > input {
   margin: 0 1rem;
+  width: 100%;
 }
 
 .player > .info {
