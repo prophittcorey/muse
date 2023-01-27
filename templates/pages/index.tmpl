@@ -7,45 +7,60 @@
   </head>
 
   <body>
-    <main>
-      <div id="player">
-        <!-- Album Art -->
-        <img src="/thumbnail/{{ .DefaultTrack.ID }}" width="320">
-
-        <!-- Now Playing -->
-        <p class="now_playing">{{ .DefaultTrack.Tag.Artist }} - {{ .DefaultTrack.Tag.Title }}</p>
-
-        <input type="range" min="0" max="100" value="0" class="slider" name="progress">
-        <p><span class="current_pos"></span> / <span class="duration"></span></p>
-
-        <!-- Player Controls -->
-        <div class="player">
-          <button class="skip_back">«</button>
-          <button class="prev">&lt;</button>
-          <button class="play">Play</button>
-          <button class="next">&gt;</button>
-          <button class="skip_forward">»</button>
+    <main class="player-container">
+      <div class="player">
+        <div class="tracker">
+          <span class="current_pos">00:00</span>
+          <input type="range" min="0" max="100" value="0" class="slider" name="progress">
+          <span class="duration">00:00</span>
         </div>
 
-        <p>
-          <input type="checkbox" id="shuffle" name="shuffle">
-          <label for="shuffle"> Shuffle</label>
-        </p>
-
-        <p>
-          <input type="checkbox" id="repeat" name="repeat">
-          <label for="repeat"> Repeat</label>
-        </p>
-
-        <!-- Track List -->
-        <ol>
-          {{ range $index, $track := .Tracks }}
-            <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} - {{ $track.Tag.Title }}</li>
-          {{ end }}
-        </ol>
-        <script src="/assets/js/app.js?v={{ ran_at }}"></script>
+        <div class="info">
+          <h1 class="current_artist">{{ .DefaultTrack.Tag.Artist }}</h1>
+          <h2 class="now_playing">{{ .DefaultTrack.Tag.Title }}</h2>
+        </div>
       </div>
     </main>
+
+    <!-- <main> -->
+    <!--   <div id="player"> -->
+        <!-- <!-1- Album Art -1-> -->
+        <!-- <img src="/thumbnail/{{ .DefaultTrack.ID }}" width="320"> -->
+
+        <!-- <!-1- Now Playing -1-> -->
+        <!-- <p class="now_playing">{{ .DefaultTrack.Tag.Artist }} - {{ .DefaultTrack.Tag.Title }}</p> -->
+
+        <!-- <input type="range" min="0" max="100" value="0" class="slider" name="progress"> -->
+        <!-- <p><span class="current_pos"></span> / <span class="duration"></span></p> -->
+
+        <!-- <!-1- Player Controls -1-> -->
+        <!-- <div class="player"> -->
+        <!--   <button class="skip_back">«</button> -->
+        <!--   <button class="prev">&lt;</button> -->
+        <!--   <button class="play">Play</button> -->
+        <!--   <button class="next">&gt;</button> -->
+        <!--   <button class="skip_forward">»</button> -->
+        <!-- </div> -->
+
+        <!-- <p> -->
+        <!--   <input type="checkbox" id="shuffle" name="shuffle"> -->
+        <!--   <label for="shuffle"> Shuffle</label> -->
+        <!-- </p> -->
+
+        <!-- <p> -->
+        <!--   <input type="checkbox" id="repeat" name="repeat"> -->
+        <!--   <label for="repeat"> Repeat</label> -->
+        <!-- </p> -->
+
+        <!-- <!-1- Track List -1-> -->
+        <!-- <ol> -->
+        <!--   {{ range $index, $track := .Tracks }} -->
+        <!--     <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} - {{ $track.Tag.Title }}</li> -->
+        <!--   {{ end }} -->
+        <!-- </ol> -->
+        <!-- <script src="/assets/js/app.js?v={{ ran_at }}"></script> -->
+      <!-- </div> -->
+    <!-- </main> -->
   </body>
 </html>
 {{ end }}

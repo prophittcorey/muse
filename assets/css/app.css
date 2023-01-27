@@ -6,10 +6,14 @@
   --ff: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 
   --black: #131313;
+  --black-faded: rgba(13, 13, 13, 0.8);
   --gray: #eee;
-  --pink: #d32b74;
-  --pink-darker: #c31b64;
-  --pink-darkest: #a30b54;
+  --pink: #ff6188;
+  --blue: #78dce8;
+  --purple: #ab9df2;
+  --white: #fff;
+
+	--background: #2c292d;
 }
 
 /* css reset */
@@ -30,6 +34,7 @@ body {
 
 html, body {
 	height: 100%;
+	background-color: var(--purple);
 }
 
 body, h1, h2, h3, h4, h5, h6, p, ol, ul {
@@ -53,46 +58,94 @@ img {
 
 /* app css */
 
-html,
-body {
+.player-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 5px;
+  background: var(--white);
+  max-height: 240px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   font-family: var(--ff);
-  font-size: 100%;
   color: var(--black);
-  vertical-align: baseline;
 }
 
-body > main {
-  max-width: 1280px;
-  margin: 0 auto;
-  line-height: 1;
-  display: block;
+.player > .tracker {
+  display: flex;
+  align-items: center;
 }
 
-hr {
-  padding: 0;
-  margin: 0;
-  outline: none;
-  border: none;
-  background: var(--gray);
-  margin-bottom: 1rem;
-  height: 1px;
+.player > .tracker > span {
+  font-size: .7rem;
+  color: var(--black-faded);
 }
 
-ol {
-  max-height: 300px;
-  overflow: auto;
-  width: max-content;
-  border: 1px solid #666;
+.player > .tracker > input {
+  margin: 0 1rem;
 }
 
-ol > li:hover {
-  background-color: #cbcbcb !important;
+.player > .info {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-ol > li:nth-child(odd) {
-  background-color: #ebebeb;
+.player > .info > h1 {
+  font-size: 1rem;
 }
 
-ol > li.active {
-  background-color: cornflowerblue !important;
+.player > .info > .now_playing {
+  font-size: .75rem;
 }
+
+/* html, */
+/* body { */
+/*   font-family: var(--ff); */
+/*   font-size: 100%; */
+/*   color: var(--black); */
+/*   vertical-align: baseline; */
+/* } */
+
+/* body > main { */
+/*   max-width: 1280px; */
+/*   margin: 0 auto; */
+/*   line-height: 1; */
+/*   display: block; */
+/* } */
+
+/* hr { */
+/*   padding: 0; */
+/*   margin: 0; */
+/*   outline: none; */
+/*   border: none; */
+/*   background: var(--gray); */
+/*   margin-bottom: 1rem; */
+/*   height: 1px; */
+/* } */
+
+/* ol { */
+/*   max-height: 300px; */
+/*   overflow: auto; */
+/*   width: max-content; */
+/*   border: 1px solid #666; */
+/* } */
+
+/* ol > li:hover { */
+/*   background-color: #cbcbcb !important; */
+/* } */
+
+/* ol > li:nth-child(odd) { */
+/*   background-color: #ebebeb; */
+/* } */
+
+/* ol > li.active { */
+/*   background-color: cornflowerblue !important; */
+/* } */
