@@ -203,5 +203,5 @@
     };
   };
 
-  new Player(d.querySelector('#player'));
+  new Player(d.querySelector('.player'));
 })(window, document)

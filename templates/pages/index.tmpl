@@ -9,6 +9,8 @@
   <body>
     <main class="player-container">
       <div class="player">
+        <img style="display: none;" src="/thumbnail/{{ .DefaultTrack.ID }}" width="320">
+
         <div class="tracker">
           <span class="current_pos">00:00</span>
           <input type="range" min="0" max="100" value="0" class="slider" name="progress">
@@ -19,6 +21,38 @@
           <h1 class="current_artist">{{ .DefaultTrack.Tag.Artist }}</h1>
           <h2 class="now_playing">{{ .DefaultTrack.Tag.Title }}</h2>
         </div>
+
+        <div class="controls">
+          <button class="skip_back" style="display: none;">
+            <img src="/assets/images/play.svg" width="30">
+          </button>
+
+          <button class="prev" style="display: none;">
+            <img src="/assets/images/play.svg" width="30">
+          </button>
+
+          <button class="play">
+            <img src="/assets/images/play.svg" width="30">
+          </button>
+
+          <button class="next" style="display: none;">
+            <img src="/assets/images/play.svg" width="30">
+          </button>
+
+          <button class="skip_forward" style="display: none;">
+            <img src="/assets/images/play.svg" width="30">
+          </button>
+        </div>
+
+        <div class="playlist">
+          <ol style="display: none;">
+            {{ range $index, $track := .Tracks }}
+              <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} - {{ $track.Tag.Title }}</li>
+            {{ end }}
+          </ol>
+        </div>
+
+        <script src="/assets/js/app.js?v={{ ran_at }}"></script>
       </div>
     </main>
 
