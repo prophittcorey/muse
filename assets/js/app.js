@@ -138,7 +138,7 @@
         _player.state.album.src = `/thumbnail/${track.dataset.id}`;
         _player.state.mode = 'playing';
         _player.state.audio.play();
-        _player.buttons.play.innerHTML = 'Pause';
+        _player.buttons.play.querySelector('img').src = '/assets/images/pause.svg';
 
         _player.actions.dispatch('track_changed', track);
       },
