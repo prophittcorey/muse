@@ -46,7 +46,6 @@
 
     this.callbacks = {
       'track_changed': [
-        function (track) { console.log('Track chanegd to ', track.dataset.title);           },
         function (track) { _player.state.title.innerText = `Muse - ${track.dataset.title}`; },
       ],
       'track_ended': [
