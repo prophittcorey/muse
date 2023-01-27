@@ -128,46 +128,7 @@ button {
   justify-content: center;
 }
 
-/* html, */
-/* body { */
-/*   font-family: var(--ff); */
-/*   font-size: 100%; */
-/*   color: var(--black); */
-/*   vertical-align: baseline; */
-/* } */
-
-/* body > main { */
-/*   max-width: 1280px; */
-/*   margin: 0 auto; */
-/*   line-height: 1; */
-/*   display: block; */
-/* } */
-
-/* hr { */
-/*   padding: 0; */
-/*   margin: 0; */
-/*   outline: none; */
-/*   border: none; */
-/*   background: var(--gray); */
-/*   margin-bottom: 1rem; */
-/*   height: 1px; */
-/* } */
-
-/* ol { */
-/*   max-height: 300px; */
-/*   overflow: auto; */
-/*   width: max-content; */
-/*   border: 1px solid #666; */
-/* } */
-
-/* ol > li:hover { */
-/*   background-color: #cbcbcb !important; */
-/* } */
-
-/* ol > li:nth-child(odd) { */
-/*   background-color: #ebebeb; */
-/* } */
-
-/* ol > li.active { */
-/*   background-color: cornflowerblue !important; */
-/* } */
+.player > .controls img:hover,
+.player > .controls svg:hover {
+  filter: invert(0.4) sepia(1) saturate(1) hue-rotate(234deg) brightness(1);
+}
