@@ -33,7 +33,8 @@
       track: 0,
       album: this.root.querySelector('img'),
       tracks: this.root.querySelectorAll('ol > li'),
-      playing: this.root.querySelector('p.now_playing'),
+      playing: this.root.querySelector('.now_playing'),
+      artist: this.root.querySelector('.current_artist'),
       shuffle: this.root.querySelector('input[name="shuffle"]'),
       repeat: this.root.querySelector('input[name="repeat"]'),
       position: this.root.querySelector('.current_pos'),
@@ -129,7 +130,8 @@
 
         var track = _player.state.tracks[_player.state.track];
 
-        _player.state.playing.innerText = `${track.dataset.artist} - ${track.dataset.title}`;
+        _player.state.playing.innerText = track.dataset.title;
+        _player.state.artist.innerText = track.dataset.artist;
         _player.state.mode = 'paused';
         _player.state.audio.pause();
         _player.state.audio.src = `/track/${track.dataset.id}`;
@@ -160,7 +162,8 @@
         _player.state.track = parseInt(this.dataset.index);
         _player.state.mode = 'paused';
         _player.state.audio.pause();
-        _player.state.playing.innerText = `${this.dataset.artist} - ${this.dataset.title}`;
+        _player.state.playing.innerText = this.dataset.title;
+        _player.state.artist.innerText = this.dataset.artist;
         _player.state.audio.src = `/track/${this.dataset.id}`;
         _player.state.album.src = `/thumbnail/${this.dataset.id}`;
         _player.state.mode = 'playing';
