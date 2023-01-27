@@ -1,6 +1,4 @@
-/*
- * app.css
- */
+/* globals */
 
 :root {
   font-size: 18px;
@@ -14,18 +12,53 @@
   --pink-darkest: #a30b54;
 }
 
-html,
+/* css reset */
+
+html {
+  box-sizing: border-box;
+  font-size: var(--font-size);
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+	height: 100%;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ol, ul {
   margin: 0;
   padding: 0;
+  font-weight: normal;
+}
+
+input, button, textarea, select {
+  font: inherit;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* app css */
+
+html,
+body {
   font-family: var(--ff);
   font-size: 100%;
   color: var(--black);
   vertical-align: baseline;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 body > main {
