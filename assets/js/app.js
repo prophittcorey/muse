@@ -82,11 +82,11 @@
     };
 
     this.buttons = {
-      play: this.root.querySelector('.player > button.play'),
-      next: this.root.querySelector('.player > button.next'),
-      prev: this.root.querySelector('.player > button.prev'),
-      skip_back: this.root.querySelector('.player > button.skip_back'),
-      skip_forward: this.root.querySelector('.player > button.skip_forward'),
+      play: this.root.querySelector('.player .play'),
+      next: this.root.querySelector('.player .next'),
+      prev: this.root.querySelector('.player .prev'),
+      skip_back: this.root.querySelector('.player .skip_back'),
+      skip_forward: this.root.querySelector('.player .skip_forward'),
     };
 
     this.actions = {
