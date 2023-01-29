@@ -12,16 +12,6 @@ go install github.com/prophittcorey/muse/cmd/muse@latest
 muse --dir "~/Music" --host "0.0.0.0" --port "3000"
 ```
 
-## Package Usage
-
-```golang
-import "github.com/prophittcorey/muse"
-
-if err := web.Serve("~/Music", "*.mp3", "**/*.mp3"); err != nil {
-  log.Fatal(err)
-}
-```
-
 ## License
 
 The source code for this repository is licensed under the MIT license, which you can
