@@ -1,6 +1,6 @@
 # Muse
 
-Turn any folder with mp3s into a streaming music player.
+A minimal, self-hostable music player.
 
 ## Installation & Tool Usage
 
