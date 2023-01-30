@@ -93,6 +93,7 @@ button {
 }
 
 .player > .tracker {
+  margin-top: .5rem;
   display: flex;
   align-items: center;
   width: 100%;
@@ -123,9 +124,22 @@ button {
 }
 
 .player > .controls {
+  margin-top: .5rem;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.player > .controls > .play {
+  margin: 0 .5rem;
+}
+
+.player > .controls > .prev {
+  margin-left: 1rem;
+}
+
+.player > .controls > .next {
+  margin-right: 1rem;
 }
 
 .player > .controls svg:hover {
@@ -138,8 +152,8 @@ button {
 }
 
 .player > .controls svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 .player > .controls img:hover {
@@ -151,5 +165,5 @@ button {
 }
 
 .player > .controls > input[type="checkbox"]:checked + label > svg {
-  fill: #333 !important;
+  fill: var(--purple) !important;
 }
