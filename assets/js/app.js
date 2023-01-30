@@ -92,8 +92,6 @@
       play: this.root.querySelector('.player .play'),
       next: this.root.querySelector('.player .next'),
       prev: this.root.querySelector('.player .prev'),
-      skip_back: this.root.querySelector('.player .skip_back'),
-      skip_forward: this.root.querySelector('.player .skip_forward'),
     };
 
     this.actions = {
@@ -188,8 +186,6 @@
 
     _player.buttons.prev.addEventListener('click',         function () { _player.actions.move(-1);  });
     _player.buttons.next.addEventListener('click',         function () { _player.actions.move(1);   });
-    _player.buttons.skip_back.addEventListener('click',    function () { _player.actions.skip(-15); });
-    _player.buttons.skip_forward.addEventListener('click', function () { _player.actions.skip(15);  });
 
     /* hook into audio events */
     _player.state.audio.onloadedmetadata = function () {
