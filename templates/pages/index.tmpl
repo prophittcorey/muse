@@ -23,17 +23,15 @@
         </div>
 
         <div class="controls">
-          <p style="display: none;">
-            <input type="checkbox" id="repeat" name="repeat">
-            <label for="repeat"> Repeat</label>
-          </p>
+          <input type="checkbox" id="repeat" name="repeat">
+          <label for="repeat">{{ embed "images" "repeat.svg" }}</label>
 
           <button class="skip_back" style="display: none;">
             <img src="/assets/images/play.svg" width="30">
           </button>
 
           <button class="prev">
-            <img src="/assets/images/backward.svg" width="30">
+            <img src="/assets/images/backward.svg" width="25">
           </button>
 
           <button class="play">
@@ -41,17 +39,15 @@
           </button>
 
           <button class="next">
-            <img src="/assets/images/forward.svg" width="30">
+            <img src="/assets/images/forward.svg" width="25">
           </button>
 
           <button class="skip_forward" style="display: none;">
             <img src="/assets/images/play.svg" width="30">
           </button>
 
-          <p style="display: none;">
-            <input type="checkbox" id="shuffle" name="shuffle">
-            <label for="shuffle"> Shuffle</label>
-          </p>
+          <input type="checkbox" id="shuffle" name="shuffle">
+          <label for="shuffle">{{ embed "images" "shuffle.svg" }}</label>
         </div>
 
         <div class="playlist">

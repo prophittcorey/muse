@@ -98,8 +98,9 @@ func listenAndServe() error {
 }
 
 var (
-	templates *template.Template
-	routes    = routecollection{}
+	templates    *template.Template
+	routes       = routecollection{}
+	inlinedCache = map[string]template.HTML{}
 )
 
 func setdefault(key, value string) {
@@ -172,6 +173,24 @@ func init() {
 		},
 		"ran_at": func() int64 {
 			return muse.RanAt
+		},
+		"embed": func(t string, name string) template.HTML {
+			if templateHTML, ok := inlinedCache[t+name]; ok {
+				return templateHTML
+			}
+
+			bs, err := muse.FS.ReadFile("assets/" + t + "/" + name)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// #nosec
+			inlined := template.HTML(string(bs))
+
+			inlinedCache[t+name] = inlined
+
+			return inlined
 		},
 	})
 

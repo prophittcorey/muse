@@ -128,7 +128,28 @@ button {
   justify-content: center;
 }
 
-.player > .controls img:hover,
 .player > .controls svg:hover {
+  cursor: pointer;
   filter: invert(0.4) sepia(1) saturate(1) hue-rotate(234deg) brightness(1);
+}
+
+.player > .controls label {
+  display: flex;
+}
+
+.player > .controls svg {
+  width: 16px;
+  height: 16px;
+}
+
+.player > .controls img:hover {
+  filter: invert(0.4) sepia(1) saturate(1) hue-rotate(234deg) brightness(1);
+}
+
+.player > .controls > input[type="checkbox"] {
+  display: none;
+}
+
+.player > .controls > input[type="checkbox"]:checked + label > svg {
+  fill: #333 !important;
 }
