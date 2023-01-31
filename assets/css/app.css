@@ -6,16 +6,12 @@
   --ff: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
 
   --black: #131313;
-  --black-faded: rgba(13, 13, 13, 0.8);
-  --black-faded-most: rgba(13, 13, 13, 0.3);
-  --gray: #eee;
-  --pink: #ff6188;
-  --blue: #78dce8;
-  --purple: #ab9df2;
   --white: #fff;
-  --offwhite: #fafafa;
 
-	--background: #2c292d;
+  --faded: rgba(13, 13, 13, 0.8);
+  --faded-most: rgba(13, 13, 13, 0.05);
+
+  --primary: #ab9df2;
 }
 
 /* css reset */
@@ -36,7 +32,7 @@ body {
 
 html, body {
 	height: 100%;
-	background-color: var(--purple);
+	background-color: var(--primary);
 }
 
 body, h1, h2, h3, h4, h5, h6, p, ol, ul {
@@ -102,7 +98,7 @@ button {
 
 .player > .tracker > span {
   font-size: .7rem;
-  color: var(--black-faded);
+  color: var(--faded);
 }
 
 .player > .tracker > input {
@@ -166,7 +162,7 @@ button {
 }
 
 .player > .controls > input[type="checkbox"]:checked + label > svg {
-  fill: var(--purple) !important;
+  fill: var(--primary) !important;
 }
 
 .player > .playlist {
@@ -177,7 +173,7 @@ button {
   max-height: 150px;
   overflow: auto;
   padding: .5rem;
-  border: 1px solid var(--purple);
+  border: 1px solid var(--primary);
   border-radius: 4px;
   font-size: .75rem;
 }
@@ -194,11 +190,11 @@ button {
 
 .player > .playlist > ol > li:hover {
   font-weight: 600;
-  background-color: var(--offwhite);
+  background-color: var(--faded-most);
 }
 
 .player > .playlist > ol .active {
-  color: var(--purple);
+  color: var(--primary);
   font-weight: 600;
 }
 
