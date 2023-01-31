@@ -139,13 +139,12 @@ button {
   margin-right: 1rem;
 }
 
-.player > .controls svg:hover {
-  cursor: pointer;
-  filter: invert(0.4) sepia(1) saturate(1) hue-rotate(234deg) brightness(1);
-}
-
 .player > .controls label {
   display: flex;
+}
+
+.control {
+  fill: red !important;
 }
 
 .player > .controls svg {
@@ -153,8 +152,16 @@ button {
   height: 14px;
 }
 
+.player > .controls .prev > svg,
+.player > .controls .next > svg {
+  width: 25px;
+  height: 25px;
+}
+
+.player > .controls svg:hover,
 .player > .controls img:hover {
-  filter: invert(0.4) sepia(1) saturate(1) hue-rotate(234deg) brightness(1);
+  cursor: pointer;
+  transition: all 250ms ease;
 }
 
 .player > .controls > input[type="checkbox"] {
