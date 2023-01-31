@@ -55,8 +55,6 @@ func (t *Tag) ParseFrames(r io.Reader) error {
 		Flags         $xx xx
 	*/
 
-	log.Printf("%s: %d bytes, %b\n", t.Header.Version(), t.Header.Size, t.Header.Flags)
-
 	for {
 		header := make([]byte, 10)
 
@@ -219,8 +217,6 @@ func (t *Track) Load() error {
 	if _, err = io.ReadFull(f, frames); err != nil {
 		return err
 	}
-
-	log.Printf("%s (%d bytes)\n", t.Path, len(frames))
 
 	return t.Tag.ParseFrames(bytes.NewReader(frames))
 }
