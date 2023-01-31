@@ -42,6 +42,7 @@
       progress: this.root.querySelector('input[name="progress"]'),
       title: d.querySelector('title'),
       audio: new Audio(`/track/${this.root.querySelector('ol > li').dataset.id}`),
+      rangeClicked: false,
     };
 
     this.callbacks = {
@@ -83,7 +84,9 @@
           _player.state.duration.innerText = timefmt(_player.state.audio.duration);
 
           _player.state.progress.max = _player.state.audio.duration;
-          _player.state.progress.value = _player.state.audio.currentTime;
+          if (!_player.state.rangeClicked) {
+            _player.state.progress.value = _player.state.audio.currentTime;
+          }
         },
       ],
     };
@@ -181,6 +184,8 @@
       });
     });
 
+
+
     /* add click handlers for each player button */
     this.buttons.play.addEventListener('click', function () {
       _player.state.mode === 'paused' ? _player.actions.play() : _player.actions.pause();
@@ -202,8 +207,16 @@
       _player.actions.dispatch('track_ended', _player.state.tracks[_player.state.track]);
     };
 
+    _player.state.progress.addEventListener("mousedown", () => {
+      _player.state.rangeClicked = true;
+    });
+
+    _player.state.progress.addEventListener("mouseup", () => {
+      _player.state.rangeClicked = false;
+    });
+
     _player.state.progress.onchange = function () {
-      _player.state.position.innerText = this.value;
+      _player.state.position.value = this.value;
       _player.state.audio.currentTime = this.value;
     };
   };
