@@ -2,6 +2,8 @@
 
 A minimal, self-hostable music player.
 
+![A screenshot demonstrating the app running in a browser.](.github/screenshot.png)
+
 ## Installation & Tool Usage
 
 ```bash
