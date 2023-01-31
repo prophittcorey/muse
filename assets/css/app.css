@@ -89,7 +89,7 @@ button {
 
 .player > .album {
   max-height: 240px;
-  height: 100%;
+  height: auto;
   border-radius: 4px;
 }
 
@@ -200,4 +200,17 @@ button {
 .player > .playlist > ol .active {
   color: var(--purple);
   font-weight: 600;
+}
+
+@media(max-width: 640px) {
+  .player-container {
+    align-items: initial;
+    justify-content: initial;
+  }
+
+  .player {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
 }
