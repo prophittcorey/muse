@@ -11,7 +11,7 @@
   --faded: rgba(13, 13, 13, 0.8);
   --faded-most: rgba(13, 13, 13, 0.05);
 
-  --primary: #ab9df2;
+  --primary: #648ba3;
 }
 
 /* css reset */
@@ -107,13 +107,14 @@ button {
 }
 
 .player > .info {
+  margin-top: .5rem;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
 .player > .info > h1 {
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 .player > .info > .now_playing {
