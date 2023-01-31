@@ -181,6 +181,15 @@ button {
   font-size: .75rem;
 }
 
+.player > .playlist > ol .artist {
+  margin-right: 1rem;
+}
+
+.player > .playlist > ol > li {
+  display: flex;
+  justify-content: space-between;
+}
+
 .player > .playlist > ol .active {
   color: var(--purple);
 }

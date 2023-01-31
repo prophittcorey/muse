@@ -45,7 +45,7 @@
         <div class="playlist">
           <ol>
             {{ range $index, $track := .Tracks }}
-              <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" >{{ $track.Tag.Artist }} - {{ $track.Tag.Title }}</li>
+              <li data-index="{{ $index }}" data-id="{{ $track.ID }}" data-title="{{ $track.Tag.Title }}" data-artist="{{ $track.Tag.Artist}}" ><span class="artist">{{ $track.Tag.Artist }}</span> <span>{{ $track.Tag.Title }}</span></li>
             {{ end }}
           </ol>
         </div>
