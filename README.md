@@ -1,6 +1,9 @@
 # Muse
 
-A minimal, self-hostable music player.
+Your music, in your browser. Muse is a minimal, self-hostable music player that
+serves any folder containing mp3 files.
+
+Written in Go with zero dependencies.
 
 ![A screenshot demonstrating the app running in a browser.](.github/screenshot.png)
 
