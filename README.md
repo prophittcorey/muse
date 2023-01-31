@@ -12,7 +12,7 @@ written in Go with zero dependencies.
 go install github.com/prophittcorey/muse/cmd/muse@latest
 
 # Serve your music.
-muse --dir "~/Music" --host "0.0.0.0" --port "3000"
+muse --dir "$HOME/Music" --host "0.0.0.0" --port "3000"
 
 # Open http://0.0.0.0:3000 with any browser on your network.
 ```
