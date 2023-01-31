@@ -135,6 +135,8 @@
 
         var track = _player.state.tracks[_player.state.track];
 
+        track.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'center' });
+
         _player.state.playing.innerText = track.dataset.title;
         _player.state.artist.innerText = track.dataset.artist;
         _player.state.mode = 'paused';
@@ -173,7 +175,7 @@
         _player.state.album.src = `/thumbnail/${this.dataset.id}`;
         _player.state.mode = 'playing';
         _player.state.audio.play();
-        _player.buttons.play.innerHTML = 'Pause';
+        _player.buttons.play.querySelector('img').src = '/assets/images/pause.svg';
 
         _player.actions.dispatch('track_changed', this);
       });
