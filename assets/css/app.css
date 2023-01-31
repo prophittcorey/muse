@@ -13,6 +13,7 @@
   --blue: #78dce8;
   --purple: #ab9df2;
   --white: #fff;
+  --offwhite: #fafafa;
 
 	--background: #2c292d;
 }
@@ -93,7 +94,7 @@ button {
 }
 
 .player > .tracker {
-  margin-top: .5rem;
+  margin-top: 1rem;
   display: flex;
   align-items: center;
   width: 100%;
@@ -169,7 +170,7 @@ button {
 }
 
 .player > .playlist {
-  margin-top: .5rem;
+  margin-top: 1rem;
 }
 
 .player > .playlist > ol {
@@ -188,8 +189,15 @@ button {
 .player > .playlist > ol > li {
   display: flex;
   justify-content: space-between;
+  cursor: pointer;
+}
+
+.player > .playlist > ol > li:hover {
+  font-weight: 600;
+  background-color: var(--offwhite);
 }
 
 .player > .playlist > ol .active {
   color: var(--purple);
+  font-weight: 600;
 }
