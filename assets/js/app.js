@@ -150,6 +150,10 @@
         _player.actions.dispatch('track_changed', track);
       },
 
+      toggle: function () {
+        _player.state.mode === 'paused' ? _player.actions.play() : _player.actions.pause();
+      },
+
       play: function () {
         _player.state.mode = 'playing';
         _player.state.audio.play();
@@ -182,12 +186,10 @@
     });
 
     /* add click handlers for each player button */
-    this.buttons.play.addEventListener('click', function () {
-      _player.state.mode === 'paused' ? _player.actions.play() : _player.actions.pause();
-    });
+    this.buttons.play.addEventListener('click', function () { _player.actions.toggle(); });
 
-    _player.buttons.prev.addEventListener('click',         function () { _player.actions.move(-1);  });
-    _player.buttons.next.addEventListener('click',         function () { _player.actions.move(1);   });
+    _player.buttons.prev.addEventListener('click', function () { _player.actions.move(-1);  });
+    _player.buttons.next.addEventListener('click', function () { _player.actions.move(1);   });
 
     /* hook into audio events */
     _player.state.audio.onloadedmetadata = function () {
@@ -205,6 +207,30 @@
     _player.state.progress.onchange = function () {
       _player.state.position.innerText = this.value;
       _player.state.audio.currentTime = this.value;
+    };
+
+    d.onkeydown = function (e) {
+      e = e || w.event;
+
+      switch (e.key) {
+        case 'Enter':
+        case 'c':
+        case ' ':
+          _player.actions.toggle();
+          break;
+
+        case 'ArrowLeft':
+        case 'h':
+        case 'k':
+          _player.actions.move(-1);
+          break;
+
+        case 'ArrowRight':
+        case 'j':
+        case 'l':
+          _player.actions.move(1);
+          break;
+      }
     };
   };
 
