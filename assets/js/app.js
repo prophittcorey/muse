@@ -103,17 +103,6 @@
         }
       },
 
-      skip: function (seconds) {
-        var t = _player.state.audio.currentTime + seconds;
-
-        if (t < 0) {
-          t = 0;
-        }
-
-        _player.state.position.innerText = t;
-        _player.state.audio.currentTime = t;
-      },
-
       move: function (direction) {
         if (_player.state.repeat.checked) {
           direction = 0
