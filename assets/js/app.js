@@ -204,8 +204,8 @@
       _player.actions.dispatch('track_ended', _player.state.tracks[_player.state.track]);
     };
 
-    _player.state.progress.onchange = function () {
-      _player.state.position.innerText = this.value;
+    _player.state.progress.oninput = function () {
+      _player.state.position.innerText = timefmt(this.value);
       _player.state.audio.currentTime = this.value;
     };
 
