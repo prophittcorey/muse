@@ -4,19 +4,16 @@
   /* Takes a number of seconds and formats into a human readable form like,
    * 90s -> "01:30" */
   function timefmt(seconds) {
-    var mins = Math.floor(seconds / 60);
-
-    var minutes = mins.toLocaleString('en-US', {
+    var options = {
       minimumIntegerDigits: 2,
       useGrouping: false
-    });
+    };
+
+    var mins = Math.floor(seconds / 60);
+    var minutes = mins.toLocaleString('en-US', options);
 
     var secs = Math.floor(seconds - (minutes * 60));
-
-    var seconds = secs.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    });
+    var seconds = secs.toLocaleString('en-US', options);
 
     return `${minutes}:${seconds}`;
   }
