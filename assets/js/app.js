@@ -221,6 +221,24 @@
           break;
       }
     };
+
+    if (navigator && navigator.mediaSession && navigator.mediaSession.setActionHandler) {
+      navigator.mediaSession.setActionHandler('previoustrack', function () {
+        _player.actions.move(-1);
+      });
+
+      navigator.mediaSession.setActionHandler('nexttrack', function () {
+        _player.actions.move(1);
+      });
+
+      navigator.mediaSession.setActionHandler('play', function () {
+        _player.actions.toggle();
+      });
+
+      navigator.mediaSession.setActionHandler('pause', function () {
+        _player.actions.toggle();
+      });
+    }
   };
 
   new Player(d.querySelector('.player'));
