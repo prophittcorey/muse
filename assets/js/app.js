@@ -4,6 +4,10 @@
   /* Takes a number of seconds and formats into a human readable form like,
    * 90s -> "01:30" */
   function timefmt(seconds) {
+    if (seconds <= 0 || isNaN(seconds)) {
+      return "00:00";
+    }
+
     var options = {
       minimumIntegerDigits: 2,
       useGrouping: false
@@ -50,10 +54,6 @@
       ],
       'track_loaded': [
         function (track) {
-          if (isNaN(_player.state.audio.duration) || isNaN(_player.state.audio.currentTime)) {
-            return;
-          }
-
           _player.state.position.innerText = timefmt(_player.state.audio.currentTime);
           _player.state.duration.innerText = timefmt(_player.state.audio.duration);
 
@@ -72,10 +72,6 @@
       ],
       'time_update': [
         function (track) {
-          if (isNaN(_player.state.audio.duration) || isNaN(_player.state.audio.currentTime)) {
-            return;
-          }
-
           _player.state.position.innerText = timefmt(_player.state.audio.currentTime);
           _player.state.duration.innerText = timefmt(_player.state.audio.duration);
 
