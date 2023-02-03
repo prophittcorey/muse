@@ -15,11 +15,7 @@ func init() {
 	// catch all handler).
 	routes.register(route{
 		Path: "/",
-		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
-			if !checkAuth(w, r) {
-				return
-			}
-
+		Handler: authenticate(logger(func(w http.ResponseWriter, r *http.Request) {
 			switch r.Method {
 			case "GET":
 				if r.URL.Path != "/" {
@@ -40,7 +36,7 @@ func init() {
 			default:
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			}
-		}),
+		})),
 	})
 
 	defaultAlbumArt, err := muse.FS.ReadFile("assets/images/album.png")
@@ -53,11 +49,7 @@ func init() {
 	// available a default image will be used.
 	routes.register(route{
 		Path: "/thumbnail/",
-		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
-			if !checkAuth(w, r) {
-				return
-			}
-
+		Handler: authenticate(logger(func(w http.ResponseWriter, r *http.Request) {
 			switch r.Method {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
@@ -71,17 +63,13 @@ func init() {
 			default:
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			}
-		}),
+		})),
 	})
 
 	// The track route will stream the actual music file given the ID.
 	routes.register(route{
 		Path: "/track/",
-		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
-			if !checkAuth(w, r) {
-				return
-			}
-
+		Handler: authenticate(logger(func(w http.ResponseWriter, r *http.Request) {
 			switch r.Method {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/track/")
@@ -95,7 +83,7 @@ func init() {
 			default:
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			}
-		}),
+		})),
 	})
 
 	// Handles all asset requests. Since we're embedding all assets into the
@@ -106,13 +94,9 @@ func init() {
 	routes.register(route{
 		Path: "/assets/",
 		Handler: func() func(http.ResponseWriter, *http.Request) {
-			return logger(func(w http.ResponseWriter, r *http.Request) {
-				if !checkAuth(w, r) {
-					return
-				}
-
+			return authenticate(logger(func(w http.ResponseWriter, r *http.Request) {
 				neuter(http.FileServer(http.FS(muse.FS))).ServeHTTP(w, r)
-			})
+			}))
 		}(),
 	})
 }

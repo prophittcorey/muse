@@ -36,36 +36,16 @@ var (
 	expectedPasswordHash [32]byte
 )
 
+// SetAuth will require authentication for all web requests. The authentication string should
+// be in the format "username:password" which will be used for basic authentication. The values
+// will not be stored in memory, rather their hashes will.
 func SetAuth(auth string) {
-	if before, after, ok := strings.Cut(auth, ":"); ok {
+	if before, after, ok := strings.Cut(strings.TrimSpace(auth), ":"); ok {
 		expectedUsernameHash = sha256.Sum256([]byte(before))
 		expectedPasswordHash = sha256.Sum256([]byte(after))
 
 		authRequired = true
 	}
-}
-
-func checkAuth(w http.ResponseWriter, r *http.Request) bool {
-	if !authRequired {
-		return true
-	}
-
-	if username, password, ok := r.BasicAuth(); ok {
-		usernameHash := sha256.Sum256([]byte(username))
-		passwordHash := sha256.Sum256([]byte(password))
-
-		usernameMatch := (subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1)
-		passwordMatch := (subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1)
-
-		if usernameMatch && passwordMatch {
-			return true
-		}
-	}
-
-	w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
-	http.Error(w, "Unauthorized", http.StatusUnauthorized)
-
-	return false
 }
 
 // Serve will load audio from a directory using any number of file globs. This
@@ -184,6 +164,35 @@ func getIP(r *http.Request) string {
 	}
 
 	return remoteIP
+}
+
+func authenticate(h http.HandlerFunc) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if authRequired {
+			authFailed := true /* guilty until proven innocent */
+
+			if username, password, ok := r.BasicAuth(); ok {
+				usernameHash := sha256.Sum256([]byte(username))
+				passwordHash := sha256.Sum256([]byte(password))
+
+				usernameMatch := (subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1)
+				passwordMatch := (subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1)
+
+				if usernameMatch && passwordMatch {
+					authFailed = false
+				}
+			}
+
+			if authFailed {
+				w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+
+				return
+			}
+		}
+
+		h(w, r)
+	}
 }
 
 func logger(h http.HandlerFunc) func(w http.ResponseWriter, r *http.Request) {
