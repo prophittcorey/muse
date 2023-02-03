@@ -23,6 +23,7 @@ func main() {
 		domain string
 		globs  string
 		dir    string
+		auth   string
 	)
 
 	flag.BoolVar(&help, "h", false, "Displays the program's usage")
@@ -31,6 +32,7 @@ func main() {
 	flag.StringVar(&domain, "domain", "localhost", "The domain name for the server (default: localhost)")
 	flag.StringVar(&dir, "dir", ".", "A base directory to base the glob patterns from (default: .)")
 	flag.StringVar(&globs, "globs", "*.mp3,**/*.mp3,**/**/*.mp3", "A comma separated list of glob patterns (default: **/*.mp3)")
+	flag.StringVar(&auth, "auth", "", "A username and password to use for basic auth (example: admin:qwerty)")
 
 	flag.Parse()
 
@@ -42,6 +44,9 @@ func main() {
 	setenv("HOST", host)
 	setenv("PORT", port)
 	setenv("DOMAIN", domain)
+	setenv("BASIC_AUTH", auth)
+
+	web.SetAuth(auth)
 
 	if err := web.Serve(dir, strings.Split(globs, ",")...); err != nil {
 		log.Fatal(err)

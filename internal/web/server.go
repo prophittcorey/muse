@@ -2,6 +2,8 @@ package web
 
 import (
 	"context"
+	"crypto/sha256"
+	"crypto/subtle"
 	"fmt"
 	"html/template"
 	"log"
@@ -26,6 +28,44 @@ type routecollection []route
 
 func (rs *routecollection) register(r route) {
 	*rs = append(*rs, r)
+}
+
+var (
+	authRequired         bool
+	expectedUsernameHash [32]byte
+	expectedPasswordHash [32]byte
+)
+
+func SetAuth(auth string) {
+	if before, after, ok := strings.Cut(auth, ":"); ok {
+		expectedUsernameHash = sha256.Sum256([]byte(before))
+		expectedPasswordHash = sha256.Sum256([]byte(after))
+
+		authRequired = true
+	}
+}
+
+func checkAuth(w http.ResponseWriter, r *http.Request) bool {
+	if !authRequired {
+		return true
+	}
+
+	if username, password, ok := r.BasicAuth(); ok {
+		usernameHash := sha256.Sum256([]byte(username))
+		passwordHash := sha256.Sum256([]byte(password))
+
+		usernameMatch := (subtle.ConstantTimeCompare(usernameHash[:], expectedUsernameHash[:]) == 1)
+		passwordMatch := (subtle.ConstantTimeCompare(passwordHash[:], expectedPasswordHash[:]) == 1)
+
+		if usernameMatch && passwordMatch {
+			return true
+		}
+	}
+
+	w.Header().Set("WWW-Authenticate", `Basic realm="restricted", charset="UTF-8"`)
+	http.Error(w, "Unauthorized", http.StatusUnauthorized)
+
+	return false
 }
 
 // Serve will load audio from a directory using any number of file globs. This

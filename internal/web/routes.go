@@ -16,6 +16,10 @@ func init() {
 	routes.register(route{
 		Path: "/",
 		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
+			if !checkAuth(w, r) {
+				return
+			}
+
 			switch r.Method {
 			case "GET":
 				if r.URL.Path != "/" {
@@ -50,6 +54,10 @@ func init() {
 	routes.register(route{
 		Path: "/thumbnail/",
 		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
+			if !checkAuth(w, r) {
+				return
+			}
+
 			switch r.Method {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/thumbnail/")
@@ -70,6 +78,10 @@ func init() {
 	routes.register(route{
 		Path: "/track/",
 		Handler: logger(func(w http.ResponseWriter, r *http.Request) {
+			if !checkAuth(w, r) {
+				return
+			}
+
 			switch r.Method {
 			case "GET":
 				id := strings.TrimPrefix(r.URL.Path, "/track/")
@@ -95,6 +107,10 @@ func init() {
 		Path: "/assets/",
 		Handler: func() func(http.ResponseWriter, *http.Request) {
 			return logger(func(w http.ResponseWriter, r *http.Request) {
+				if !checkAuth(w, r) {
+					return
+				}
+
 				neuter(http.FileServer(http.FS(muse.FS))).ServeHTTP(w, r)
 			})
 		}(),
