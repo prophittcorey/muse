@@ -24,6 +24,14 @@ Muse locates all mp3 files within the specified directory and all subdirectories
 Each mp3 file's internal ID3 tags are parsed and used for each track's artist,
 title and album artwork.
 
+## Additional Options
+
+```bash
+# If serving over the public internet or simply to add some security you can set
+# a basic authentication username and password.
+muse --dir "$HOME/Music" --host "0.0.0.0" --port "3000" --auth admin:qwerty
+```
+
 ## License
 
 The source code for this repository is licensed under the MIT license, which you can
