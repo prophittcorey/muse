@@ -32,6 +32,14 @@ title and album artwork.
 muse --dir "$HOME/Music" --host "0.0.0.0" --port "3000" --auth admin:qwerty
 ```
 
+If command line arguments are not your thing you can also use environment
+variables. The following variables are available for use.
+
+- `HOST`
+- `PORT`
+- `DOMAIN`
+- `BASIC_AUTH`
+
 ## License
 
 The source code for this repository is licensed under the MIT license, which you can
