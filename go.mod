@@ -1,3 +1,3 @@
 module github.com/prophittcorey/muse
 
-go 1.19
+go 1.20
