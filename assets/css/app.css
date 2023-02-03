@@ -114,10 +114,10 @@ button {
 }
 
 .player > .info > h1 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
-.player > .info > .now_playing {
+.player > .info > h2 {
   font-size: .75rem;
 }
 
