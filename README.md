@@ -5,6 +5,15 @@ written in Go with zero dependencies.
 
 ![A screenshot demonstrating the app running in a browser.](.github/screenshot.png)
 
+## How it Works
+
+Muse locates all mp3 files within the specified directory and all of its
+subdirectories.
+
+Each located file is parsed and has its ID3 tags analyzed. Muse uses the artist,
+title and album artwork tags for display purposes. No external web requests are
+performed.
+
 ## Installation & Tool Usage
 
 ```bash
@@ -17,18 +26,12 @@ muse --dir "$HOME/Music" --host "0.0.0.0" --port "3000"
 # Open http://0.0.0.0:3000 with any browser on your network.
 ```
 
-## How it Works
+## Settings
 
-Muse locates all mp3 files within the specified directory and all subdirectories.
-
-Each mp3 file's internal ID3 tags are parsed and used for each track's artist,
-title and album artwork.
-
-## Additional Options
+If serving over the public internet or simply to add some security you can set
+a basic authentication username and password.
 
 ```bash
-# If serving over the public internet or simply to add some security you can set
-# a basic authentication username and password.
 muse --dir "$HOME/Music" --host "0.0.0.0" --port "3000" --auth admin:qwerty
 ```
 
