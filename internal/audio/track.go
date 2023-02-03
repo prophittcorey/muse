@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path"
 	"strings"
 	"unicode/utf16"
 	"unicode/utf8"
@@ -149,6 +150,12 @@ type Track struct {
 	ID   string
 	Path string
 	Tag  *Tag
+}
+
+func (t *Track) GetFileName() string {
+	ext := path.Ext(t.Path)
+	file_name := strings.TrimSuffix(path.Base(t.Path), ext)
+	return file_name
 }
 
 func (t *Track) Load() error {
