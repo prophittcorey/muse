@@ -157,11 +157,29 @@ func (t *Track) FileName() string {
 }
 
 func (t *Track) Artist() string {
+	if len(t.Tag.Artist) == 0 {
+		filename := t.FileName()
+
+		/* a common convention is "artist - title.mp3" */
+		if before, _, ok := strings.Cut(filename, " - "); ok {
+			return before
+		}
+
+		return "Unknown"
+	}
+
 	return t.Tag.Artist
 }
 
 func (t *Track) Title() string {
 	if len(t.Tag.Title) == 0 {
+		filename := t.FileName()
+
+		/* a common convention is "artist - title.mp3" */
+		if _, after, ok := strings.Cut(filename, " - "); ok {
+			return after
+		}
+
 		return t.FileName()
 	}
 
