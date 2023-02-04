@@ -152,10 +152,8 @@ type Track struct {
 	Tag  *Tag
 }
 
-func (t *Track) GetFileName() string {
-	ext := path.Ext(t.Path)
-	file_name := strings.TrimSuffix(path.Base(t.Path), ext)
-	return file_name
+func (t *Track) FileName() string {
+	return strings.TrimSuffix(path.Base(t.Path), path.Ext(t.Path))
 }
 
 func (t *Track) Load() error {
