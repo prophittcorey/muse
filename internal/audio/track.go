@@ -156,6 +156,18 @@ func (t *Track) FileName() string {
 	return strings.TrimSuffix(path.Base(t.Path), path.Ext(t.Path))
 }
 
+func (t *Track) Artist() string {
+	return t.Tag.Artist
+}
+
+func (t *Track) Title() string {
+	if len(t.Tag.Title) == 0 {
+		return t.FileName()
+	}
+
+	return t.Tag.Title
+}
+
 func (t *Track) Load() error {
 	f, err := os.Open(t.Path)
 
